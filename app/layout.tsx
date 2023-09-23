@@ -19,7 +19,7 @@ export default function RootLayout({
   return (
     <ClerkProvider localization={ptBR}>
       <html lang="pt-br">
-        <body className={inter.className}>{children}</body>
+        <body className={inter.className + ' min-h-full grid grid-rows-[auto,1fr,auto]'}>{children}</body>
       </html>
     </ClerkProvider>
   )

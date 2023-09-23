@@ -20,6 +20,14 @@ body,
   .nav:hover::after {
     @apply w-full left-0
   }
+
+  .nav-clicked {
+    @apply relative
+  }
+
+  .nav-clicked::after {
+    @apply absolute w-full left-0 content-[''] bg-gray-800 h-[1px] bottom-[5px]
+  }
 }
 
 @layer base {
