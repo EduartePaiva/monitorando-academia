@@ -41,8 +41,8 @@ export default function Header() {
         <header className="bg-gray-300 shadow-lg shadow-gray-400">
             <nav className='h-12 flex justify-between items-center'>
                 <div className='flex justify-around w-full font-semibold h-full'>
-                    {routes.map((route) => (
-                        <Link href={route.href} className="">
+                    {routes.map((route, index) => (
+                        <Link href={route.href} key={index}>
                             <div className={`${route.active ? "nav-clicked" : 'nav'} h-full flex items-center`}>
                                 {route.label}
 
