@@ -31,14 +31,12 @@ export const Modal: React.FC<ModalProps> = ({
 
     return (
         <Dialog open={isOpen} onOpenChange={onChange}>
-            <DialogContent>
+            <DialogContent className="max-w-fit min-w-[95%] sm:min-w-[80%] md:min-w-[70%] lg:min-w-[60%] xl:min-w-[50%]">
                 <DialogHeader>
                     <DialogTitle className="text-gray-800">{title}</DialogTitle>
                     <DialogDescription>{description}</DialogDescription>
                 </DialogHeader>
-                <div>
-                    {children}
-                </div>
+                {children}
             </DialogContent>
         </Dialog>
     )
