@@ -36,7 +36,7 @@ export default function AddExercicio({ diaDaSemana, onClose }: AddExercicioProps
             </div>
 
             <div>
-                {opcaoSelecionada === 'Personalizado' && <AddExercicioPersonalizado onClose={onClose} />}
+                {opcaoSelecionada === 'Personalizado' && <AddExercicioPersonalizado onClose={onClose} diaDaSemana={diaDaSemana} />}
                 {opcaoSelecionada === 'BancoDeDados' && <AddExercicioBanco />}
                 {opcaoSelecionada === undefined && (<div className="w-full h-24 leading-[6rem] text-center text-gray-800">Selecione uma opção acima</div>)}
             </div>
