@@ -28,7 +28,7 @@ export default function ExerciciosPage() {
                 onClose={onClose}
                 title="Adicionando Treino"
                 description="Adicione o Exercício!"
-                children={<AddExercicio diaDaSemana={diaDaSemana} />}
+                children={<AddExercicio diaDaSemana={diaDaSemana} onClose={onClose} />}
             />
 
             {dias_da_semana.map((dia, index) => (

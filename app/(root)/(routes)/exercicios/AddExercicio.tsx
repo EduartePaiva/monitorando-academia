@@ -6,13 +6,14 @@ import AddExercicioBanco from "./AddExercicioBanco"
 
 interface AddExercicioProps {
     diaDaSemana: number
+    onClose: () => void
 }
 
 /*
 os dias da semana começam com segunda = 0 e domingo = 6
 */
 
-export default function AddExercicio({ diaDaSemana }: AddExercicioProps) {
+export default function AddExercicio({ diaDaSemana, onClose }: AddExercicioProps) {
     const [opcaoSelecionada, setOpcaoSelecionada] = useState<undefined | "BancoDeDados" | "Personalizado">()
 
 
@@ -35,7 +36,7 @@ export default function AddExercicio({ diaDaSemana }: AddExercicioProps) {
             </div>
 
             <div>
-                {opcaoSelecionada === 'Personalizado' && <AddExercicioPersonalizado />}
+                {opcaoSelecionada === 'Personalizado' && <AddExercicioPersonalizado onClose={onClose} />}
                 {opcaoSelecionada === 'BancoDeDados' && <AddExercicioBanco />}
                 {opcaoSelecionada === undefined && (<div className="w-full h-24 leading-[6rem] text-center text-gray-800">Selecione uma opção acima</div>)}
             </div>
