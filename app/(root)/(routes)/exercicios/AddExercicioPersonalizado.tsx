@@ -2,12 +2,11 @@
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from 'zod'
-
+import { exercicioFormSchema } from "@/lib/zodSchemas"
 import { useForm } from 'react-hook-form'
 import {
     Form,
     FormControl,
-    FormDescription,
     FormField,
     FormItem,
     FormLabel,
@@ -15,40 +14,43 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { useToast } from "@/components/ui/use-toast"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { useState } from "react"
+import axios from 'axios'
+import toast from "react-hot-toast"
 
 
-const formSchema = z.object({
-    nome: z.string().min(2, { message: "Mínimo de 2 letras" }).max(20, { message: "O máximo de letras é 300" }),
-    descricao: z.string().min(2, { message: "Mínimo de 2 letras" }).max(300, { message: "O máximo de letras é 300" }),
-    imageUrl: z.string().url({ message: 'Url inálido' }).refine((val) => val.includes('imgur.com'), { message: 'É necessário que a imagem seja do site imgur.com' }).optional().or(z.literal('')),
-    diaDaSemana: z.string().refine((val) => { const valInt = parseInt(val); return valInt >= 0 && valInt <= 6; })
-})
+
 
 export default function AddExercicioPersonalizado({ onClose, diaDaSemana }: { onClose: () => void, diaDaSemana: number }) {
-    const { toast } = useToast()
 
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
+    const [loading, setLoading] = useState(false)
+
+    const form = useForm<z.infer<typeof exercicioFormSchema>>({
+        resolver: zodResolver(exercicioFormSchema),
         defaultValues: {
             descricao: "",
             nome: "",
             imageUrl: "",
-            diaDaSemana: `${diaDaSemana}`
+            dia_da_semana: `${diaDaSemana}`
         }
     })
 
-    function onSubmit(data: z.infer<typeof formSchema>) {
-        toast({
-            title: "You submitted the following values:",
-            description: (
-                <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-                    <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-                </pre>
-            ),
-        })
+    async function onSubmit(data: z.infer<typeof exercicioFormSchema>) {
+        try {
+            setLoading(true)
+
+            const response = await axios.post('/api/exercicios', data)
+            console.log(response)
+            toast.success('Exercício adicionado com sucesso!')
+
+        } catch (err) {
+            console.log(err)
+            toast.error("Erro ao adicionar o exercício!")
+        } finally {
+            setLoading(false)
+        }
     }
 
 
@@ -65,7 +67,7 @@ export default function AddExercicioPersonalizado({ onClose, diaDaSemana }: { on
                         <FormItem>
                             <FormLabel>Nome do exercício</FormLabel>
                             <FormControl>
-                                <Input placeholder='Nome' {...field} />
+                                <Input disabled={loading} placeholder='Nome' {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -79,7 +81,7 @@ export default function AddExercicioPersonalizado({ onClose, diaDaSemana }: { on
                         <FormItem>
                             <FormLabel>Descrição</FormLabel>
                             <FormControl>
-                                <Textarea placeholder='Insira a descrição do exercício' className="resize-none" {...field} />
+                                <Textarea disabled={loading} placeholder='Insira a descrição do exercício' className="resize-none" {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -88,27 +90,13 @@ export default function AddExercicioPersonalizado({ onClose, diaDaSemana }: { on
                 />
                 <FormField
                     control={form.control}
-                    name='imageUrl'
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Url da imagem (Não obrigatório)</FormLabel>
-                            <FormControl>
-                                <Input placeholder='Insira um URL de uma imagem do site imgur.com' {...field} />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name='diaDaSemana'
+                    name='dia_da_semana'
                     render={({ field }) => (
                         <FormItem className="">
                             <FormLabel>Selecione o dia da semana</FormLabel>
                             <div className="w-[50%]">
 
-                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <Select disabled={loading} onValueChange={field.onChange} defaultValue={field.value}>
                                     <FormControl>
                                         <SelectTrigger>
                                             <SelectValue placeholder="Select a verified email to display" />
@@ -131,10 +119,25 @@ export default function AddExercicioPersonalizado({ onClose, diaDaSemana }: { on
                     )}
                 />
 
+                <FormField
+                    control={form.control}
+                    name='imageUrl'
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Url da imagem (Não obrigatório)</FormLabel>
+                            <FormControl>
+                                <Input disabled={loading} placeholder='Insira um URL de uma imagem do site imgur.com' {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+
+                    )}
+                />
+
 
                 <div className="flex justify-around">
-                    <Button variant="outline" type='submit' className="">Enviar</Button>
-                    <Button onClick={(e) => { e.preventDefault(); onClose(); }}>Cancelar</Button>
+                    <Button disabled={loading} variant="outline" type='submit' className="">Enviar</Button>
+                    <Button disabled={loading} onClick={(e) => { e.preventDefault(); onClose(); }}>Cancelar</Button>
 
                 </div>
             </form>

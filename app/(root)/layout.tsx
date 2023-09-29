@@ -1,4 +1,4 @@
-import { Toaster } from "@/components/ui/toaster";
+import { Toaster } from "react-hot-toast";
 import Footer from "./Footer";
 import Header from "./Header";
 
