@@ -4,6 +4,9 @@ import { Plus } from "lucide-react";
 import { Modal } from "./modalDialog";
 import { useState } from "react";
 import AddExercicio from "./AddExercicio";
+import { useQuery } from "@tanstack/react-query";
+import { SafeExercicio, exercicioGet } from "@/types";
+import axios from "axios";
 
 const dias_da_semana = ['SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SAB', 'DOM']
 
@@ -19,6 +22,16 @@ export default function ExerciciosPage() {
     const onClose = () => {
         setIsOpen(false)
     }
+
+    const { data, isLoading } = useQuery({
+        queryKey: ['exercicios'],
+        queryFn: async () => {
+            const response = await axios.get('/api/exercicios')
+            const data = await response.data as SafeExercicio[]
+            return data
+        }
+    })
+
 
 
     return (

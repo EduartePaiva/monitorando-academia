@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import { ClerkProvider } from '@clerk/nextjs'
 import { ptBR } from '@clerk/localizations'
+import ReactQueryProvider from '@/providers/ReactQueryProvider'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -19,7 +20,11 @@ export default function RootLayout({
   return (
     <ClerkProvider localization={ptBR}>
       <html lang="pt-br">
-        <body className={inter.className + ' min-h-full grid grid-rows-[auto,1fr,auto]'}>{children}</body>
+        <body className={inter.className + ' min-h-full grid grid-rows-[auto,1fr,auto]'}>
+          <ReactQueryProvider>
+            {children}
+          </ReactQueryProvider>
+        </body>
       </html>
     </ClerkProvider>
   )
