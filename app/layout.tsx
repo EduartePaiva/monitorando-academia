@@ -4,6 +4,7 @@ import { Inter } from 'next/font/google'
 import { ClerkProvider } from '@clerk/nextjs'
 import { ptBR } from '@clerk/localizations'
 import ReactQueryProvider from '@/providers/ReactQueryProvider'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -23,6 +24,7 @@ export default function RootLayout({
         <body className={inter.className + ' min-h-full grid grid-rows-[auto,1fr,auto]'}>
           <ReactQueryProvider>
             {children}
+            <ReactQueryDevtools initialIsOpen={false} />
           </ReactQueryProvider>
         </body>
       </html>

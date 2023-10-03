@@ -43,6 +43,7 @@
     "zod": "^3.22.2"
   },
   "devDependencies": {
+    "@tanstack/react-query-devtools": "^4.35.7",
     "prisma": "^5.3.1"
   }
 }

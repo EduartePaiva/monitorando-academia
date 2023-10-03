@@ -23,7 +23,7 @@ export async function GET(request: Request) {
                 descricao: true
             }
         })
-
+        console.log("GET_EXERCICIOS")
         return NextResponse.json(exercicios.map((exercicio) => (
             {
                 ...exercicio,
