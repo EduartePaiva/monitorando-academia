@@ -9,7 +9,7 @@ export default function LayoutLogado(
     return (
         <>
             <Header />
-            <main className="flex justify-center items-start mt-16">
+            <main className="flex justify-center items-start">
                 {children}
                 <Toaster />
             </main>

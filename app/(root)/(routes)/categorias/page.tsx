@@ -1,20 +1,19 @@
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import NovaCategoria from "./NovaCategoria";
+import CategoriaCard from "./CategoriaCard";
 
 export default function CategoriasPage() {
     return (
-        <Select>
-            <SelectTrigger>
-                <SelectValue placeholder="Select a verified email to display" />
-            </SelectTrigger>
-            <SelectContent className="">
-                <SelectItem value="0">Segunda</SelectItem>
-                <SelectItem value="1">Terça</SelectItem>
-                <SelectItem value="2">Quarta</SelectItem>
-                <SelectItem value="3">Quinta</SelectItem>
-                <SelectItem value="4">Sexta</SelectItem>
-                <SelectItem value="5">Sábado</SelectItem>
-                <SelectItem value="6">Domingo</SelectItem>
-            </SelectContent>
-        </Select>
+        <div className="container h-full">
+            <div className="flex flex-col h-full">
+                <NovaCategoria className="self-end absolute" />
+                <div className="h-full flex items-center flex-col gap-16 justify-center">
+
+                    <CategoriaCard />
+                    <CategoriaCard />
+                    <CategoriaCard />
+                </div>
+            </div>
+        </div>
     )
 }

@@ -19,13 +19,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useState } from "react"
 import axios from 'axios'
 import toast from "react-hot-toast"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { SafeExercicio } from "@/types"
 
 
 
 
 export default function AddExercicioPersonalizado({ onClose, diaDaSemana }: { onClose: () => void, diaDaSemana: number }) {
-
-    const [loading, setLoading] = useState(false)
+    const queryClient = useQueryClient()
 
     const form = useForm<z.infer<typeof exercicioFormSchema>>({
         resolver: zodResolver(exercicioFormSchema),
@@ -37,27 +38,31 @@ export default function AddExercicioPersonalizado({ onClose, diaDaSemana }: { on
         }
     })
 
-    async function onSubmit(data: z.infer<typeof exercicioFormSchema>) {
-        try {
-            setLoading(true)
-
-            const response = await axios.post('/api/exercicios', data)
-            console.log(response)
+    const { isLoading, mutate: onSubmitMutate } = useMutation({
+        mutationKey: ['exercicios'],
+        mutationFn: async (dados: z.infer<typeof exercicioFormSchema>) => {
+            return axios.post('/api/exercicios', dados)
+        },
+        onSuccess: (response) => {
+            const data: SafeExercicio = response.data
+            console.log(data)
             toast.success('Exercício adicionado com sucesso!')
-
-        } catch (err) {
+            const oldData = queryClient.getQueryData<SafeExercicio[]>(['exercicios'])
+            if (oldData) {
+                queryClient.setQueryData(['exercicios'], [...oldData, data])
+            }
+            onClose()
+        },
+        onError: (err) => {
             console.log(err)
             toast.error("Erro ao adicionar o exercício!")
-        } finally {
-            setLoading(false)
         }
-    }
-
+    })
 
     return (
         <Form {...form}>
             <form
-                onSubmit={form.handleSubmit(onSubmit)}
+                onSubmit={form.handleSubmit((data) => onSubmitMutate(data))}
                 className='space-y-8 m-4'
             >
                 <FormField
@@ -67,7 +72,7 @@ export default function AddExercicioPersonalizado({ onClose, diaDaSemana }: { on
                         <FormItem>
                             <FormLabel>Nome do exercício</FormLabel>
                             <FormControl>
-                                <Input disabled={loading} placeholder='Nome' {...field} />
+                                <Input disabled={isLoading} placeholder='Nome' {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -81,7 +86,7 @@ export default function AddExercicioPersonalizado({ onClose, diaDaSemana }: { on
                         <FormItem>
                             <FormLabel>Descrição</FormLabel>
                             <FormControl>
-                                <Textarea disabled={loading} placeholder='Insira a descrição do exercício' className="resize-none" {...field} />
+                                <Textarea disabled={isLoading} placeholder='Insira a descrição do exercício' className="resize-none" {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -96,7 +101,7 @@ export default function AddExercicioPersonalizado({ onClose, diaDaSemana }: { on
                             <FormLabel>Selecione o dia da semana</FormLabel>
                             <div className="w-[50%]">
 
-                                <Select disabled={loading} onValueChange={field.onChange} defaultValue={field.value}>
+                                <Select disabled={isLoading} onValueChange={field.onChange} defaultValue={field.value}>
                                     <FormControl>
                                         <SelectTrigger>
                                             <SelectValue placeholder="Select a verified email to display" />
@@ -126,7 +131,7 @@ export default function AddExercicioPersonalizado({ onClose, diaDaSemana }: { on
                         <FormItem>
                             <FormLabel>Url da imagem (Não obrigatório)</FormLabel>
                             <FormControl>
-                                <Input disabled={loading} placeholder='Insira um URL de uma imagem do site imgur.com' {...field} />
+                                <Input disabled={isLoading} placeholder='Insira um URL de uma imagem do site imgur.com' {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
@@ -136,8 +141,8 @@ export default function AddExercicioPersonalizado({ onClose, diaDaSemana }: { on
 
 
                 <div className="flex justify-around">
-                    <Button disabled={loading} variant="outline" type='submit' className="">Enviar</Button>
-                    <Button disabled={loading} onClick={(e) => { e.preventDefault(); onClose(); }}>Cancelar</Button>
+                    <Button disabled={isLoading} variant="outline" type='submit' className="">Enviar</Button>
+                    <Button disabled={isLoading} onClick={(e) => { e.preventDefault(); onClose(); }}>Cancelar</Button>
 
                 </div>
             </form>

@@ -54,12 +54,21 @@ export async function POST(request: Request) {
                 dia_da_semana: parseInt(date.dia_da_semana),
                 nome: date.nome,
                 imagem_url: date.imageUrl
+            },
+            select: {
+                id: true,
+                categoriaId: true,
+                imagem_url: true,
+                nome: true,
+                dia_da_semana: true,
+                descricao: true
             }
         })
 
         return NextResponse.json({
             ...exercicio,
-            id: exercicio.id.toString()
+            id: exercicio.id.toString(),
+            categoriaId: exercicio.categoriaId?.toString()
         })
 
     } catch (err) {

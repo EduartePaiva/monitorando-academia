@@ -38,7 +38,7 @@ export default function Header() {
 
 
     return (
-        <header className="bg-gray-300 shadow-lg shadow-gray-400">
+        <header className="bg-gray-300 shadow-lg shadow-gray-400 mb-16">
             <nav className='h-12 flex justify-between items-center'>
                 <div className='flex justify-around w-full font-semibold h-full'>
                     {routes.map((route, index) => (
