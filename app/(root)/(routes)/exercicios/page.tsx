@@ -1,7 +1,7 @@
 'use client'
 
 import { Plus } from "lucide-react";
-import { Modal } from "./modalDialog";
+import { Modal } from "../../../../components/modalDialog";
 import { useState } from "react";
 import AddExercicio from "./AddExercicio";
 import { useQuery } from "@tanstack/react-query";

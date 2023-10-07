@@ -27,5 +27,6 @@ model Categoria {
   id         BigInt      @id @default(autoincrement())
   userId     String
   nome       String
+  descricao  String
   exercicios Exercicio[] @relation("categoriaDoExercicio")
 }

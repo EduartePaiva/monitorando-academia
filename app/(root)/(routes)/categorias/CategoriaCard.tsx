@@ -1,11 +1,19 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
-export default function CategoriaCard() {
+interface CategoriaCardProps {
+    titulo: string
+    descricao: string
+}
+
+export default function CategoriaCard({
+    descricao,
+    titulo
+}: CategoriaCardProps) {
     return (
         <Card className="w-1/3">
             <CardHeader className="items-center">
-                <CardTitle>Card Title</CardTitle>
-                <CardDescription>Card Description</CardDescription>
+                <CardTitle>{titulo}</CardTitle>
+                <CardDescription>{descricao}</CardDescription>
             </CardHeader>
             <CardContent>
                 teste

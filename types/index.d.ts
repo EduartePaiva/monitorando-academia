@@ -1,4 +1,4 @@
-import { Exercicio } from "@prisma/client";
+import { Categoria, Exercicio } from "@prisma/client";
 
 //exercicios get é um arrei deste
 export interface exercicioGet {
@@ -18,4 +18,11 @@ export type SafeExercicio = Omit<
 > & {
     id: string;
     categoriaId: string | undefined;
+}
+
+export type SafeCategoria = Omit<
+    Categoria,
+    "id"
+> & {
+    id: string;
 }
