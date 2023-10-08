@@ -1,11 +1,14 @@
+'use client'
+
 import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { categoriaFormSchema } from "@/lib/zodSchemas"
+import { SafeCategoria } from "@/types"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useQueryClient } from "@tanstack/react-query"
 import axios from "axios"
-import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import toast from "react-hot-toast"
@@ -13,36 +16,51 @@ import * as z from 'zod'
 
 interface AddCategoriaFormProps {
     onClose: () => void
+    categoriaEdit?: SafeCategoria
 }
 
-export default function AddEditCategoriaForm({
-    onClose
+export default function EditCategoriaForm({
+    onClose,
+    categoriaEdit
 
 }: AddCategoriaFormProps) {
     const [isLoading, setIsLoading] = useState(false)
-    const router = useRouter()
+    const queryClient = useQueryClient()
 
 
     const form = useForm<z.infer<typeof categoriaFormSchema>>({
         resolver: zodResolver(categoriaFormSchema),
         defaultValues: {
-            descricao: "",
-            nome: ""
+            descricao: categoriaEdit?.descricao,
+            nome: categoriaEdit?.nome
         }
     })
 
     const onSubmit = async (dados: z.infer<typeof categoriaFormSchema>) => {
         try {
             setIsLoading(true)
-            const { status } = await axios.post("/api/categorias", dados)
-
-            if (status === 200) {
+            const response = await axios.patch(`/api/categorias/${categoriaEdit?.id}`, dados)
+            const data: SafeCategoria = response.data
+            if (response.status === 200) {
                 toast.success("Categoria adicionada com sucesso!")
-                router.refresh()
+
+                const oldData = queryClient.getQueryData<SafeCategoria[]>(['categorias'])
+                if (oldData) {
+                    const newData = [...oldData]
+                    const safeCategoria = newData.find((exerc) => exerc.id === data.id)
+
+                    if (safeCategoria) {
+                        safeCategoria.descricao = data.descricao
+                        safeCategoria.nome = data.nome
+
+                        queryClient.setQueryData(['categorias'], newData)
+                    }
+
+                }
                 onClose()
             } else {
-                console.log(status)
-                toast.error("Algum erro ocorreu, status: " + status)
+                console.log(response.status)
+                toast.error("Algum erro ocorreu, status: " + response.status)
             }
         } catch (err) {
             toast.error("Falha ao adicionar a categoria.")
@@ -78,17 +96,15 @@ export default function AddEditCategoriaForm({
                         <FormItem>
                             <FormLabel>Descrição</FormLabel>
                             <FormControl>
-                                <Textarea disabled={isLoading} placeholder='Insira a descrição da categoria' className="resize-none" {...field} />
+                                <Textarea disabled={isLoading} placeholder='Insira a descrição do exercício' className="resize-none" {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
 
                     )}
                 />
-
-
                 <div className="flex justify-around">
-                    <Button disabled={isLoading} variant="outline" type='submit' className="">Enviar</Button>
+                    <Button disabled={isLoading} variant="outline" type='submit' className="">{isLoading ? 'Editando' : 'Editar'}</Button>
                     <Button disabled={isLoading} onClick={(e) => { e.preventDefault(); onClose(); }}>Cancelar</Button>
 
                 </div>

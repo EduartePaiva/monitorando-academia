@@ -1,8 +1,9 @@
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import NovaCategoria from "./NovaCategoria";
 import CategoriaCard from "./CategoriaCard";
 import prismadb from "@/lib/prismadb";
 import { auth } from "@clerk/nextjs";
+import ExibirCategorias from "./ExibirCategorias";
+import { SafeCategoria } from "@/types";
 
 export default async function CategoriasPage() {
 
@@ -14,18 +15,21 @@ export default async function CategoriasPage() {
             userId
         }
     })
-
+    const safeCategorias: SafeCategoria[] = categorias.map((categoria) => ({
+        descricao: categoria.descricao,
+        id: categoria.id.toString(),
+        nome: categoria.nome
+    }))
 
     return (
         <div className="container h-full">
             <div className="flex flex-col h-full">
                 <NovaCategoria className="self-end absolute" />
-                <div className="h-full flex items-center flex-col gap-16 justify-center">
-
-                    {categorias.map((categoria, index) => (
-                        <CategoriaCard key={index} descricao={categoria.descricao} titulo={categoria.nome} />
-                    ))}
-                </div>
+                {safeCategorias.length > 1 ? (
+                    <ExibirCategorias initialCategorias={safeCategorias} />
+                ) : (
+                    <span className="text-lg font-semibold">Não há categoria adicionada, clique em "Nova Categoria" para adicionar uma.</span>
+                )}
             </div>
         </div>
     )

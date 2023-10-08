@@ -3,7 +3,7 @@
 import { Modal } from "@/components/modalDialog";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import AddCategoriaForm from "./AddCategoriaForm";
+import AddEditCategoriaForm from "./AddCategoriaForm";
 
 
 export default function NovaCategoria({ className }: { className: string }) {
@@ -15,11 +15,11 @@ export default function NovaCategoria({ className }: { className: string }) {
     return (
         <div className={className}>
             <Modal
-                description="descrição teste"
+                description="Cria uma categoria"
                 isOpen={isOpen}
                 onClose={onClose}
-                title="teste"
-                children={<AddCategoriaForm onClose={onClose} />}
+                title="Categoria"
+                children={<AddEditCategoriaForm onClose={onClose} />}
             />
             <Button onClick={() => setIsOpen(true)}>
                 Nova Categoria

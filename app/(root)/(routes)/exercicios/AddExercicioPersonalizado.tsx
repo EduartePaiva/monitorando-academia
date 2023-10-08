@@ -43,6 +43,7 @@ export default function AddExercicioPersonalizado({ onClose, diaDaSemana }: { on
             return axios.post('/api/exercicios', dados)
         },
         onSuccess: (response) => {
+            //possivel bug aqui estou só considerando caso seja adicionado
             const data: SafeExercicio = response.data
             console.log(data)
             toast.success('Exercício adicionado com sucesso!')

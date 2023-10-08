@@ -2,6 +2,7 @@ import { auth } from "@clerk/nextjs"
 import { NextResponse } from "next/server"
 import { exercicioFormSchema } from "@/lib/zodSchemas"
 import prismadb from "@/lib/prismadb"
+import { SafeExercicio } from "@/types"
 
 
 //retorna todos os exercícios
@@ -21,16 +22,24 @@ export async function GET(request: Request) {
                 nome: true,
                 dia_da_semana: true,
                 descricao: true
+            },
+            orderBy: {
+                categoriaId: {
+                    sort: 'asc',
+                    nulls: "first"
+                }
             }
         })
-        console.log("GET_EXERCICIOS")
-        return NextResponse.json(exercicios.map((exercicio) => (
+
+        const exerciciosSafe: SafeExercicio[] = exercicios.map((exercicio) => (
             {
                 ...exercicio,
                 id: exercicio.id.toString(),
                 categoriaId: exercicio.categoriaId?.toString()
             }
-        )))
+        ))
+
+        return NextResponse.json(exerciciosSafe)
 
     } catch (err) {
         console.log('[EXERCICIOS_GET]', err)

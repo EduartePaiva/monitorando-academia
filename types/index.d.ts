@@ -22,7 +22,7 @@ export type SafeExercicio = Omit<
 
 export type SafeCategoria = Omit<
     Categoria,
-    "id"
+    "id" | "userId"
 > & {
     id: string;
 }
