@@ -1,8 +1,8 @@
-import { SafeExercicio } from "@/types";
+import { SafeCategoria, SafeCategoriaComExercicios, SafeExercicio } from "@/types";
 import { ComboboxExercicios } from "./ComboboxExercicios";
 import { auth } from "@clerk/nextjs";
 import prismadb from "@/lib/prismadb";
-import { ComboboxExercicios2 } from "./ComboboxExercicios2";
+import SistemaDeCategorias from "./SistemaDeCategorias";
 
 async function getExercicios() {
     try {
@@ -44,27 +44,63 @@ async function getExercicios() {
     }
 }
 
+async function getCurrentCategory(categoryId: string) {
+    try {
+        const { userId } = auth()
+        if (!userId) return false
+
+        const categoria = await prismadb.categoria.findFirst({
+            where: {
+                id: BigInt(categoryId),
+                userId,
+            },
+            select: {
+                descricao: true,
+                id: true,
+                nome: true,
+                exercicios: {
+                    where: {
+                        categoriaId: BigInt(categoryId)
+                    },
+                    select: {
+                        id: true,
+                        nome: true
+                    }
+
+                }
+            }
+        })
+
+        if (categoria === null) return false
+
+        console.log("CATEGORIA_GET")
+        const categoriaSafe: SafeCategoriaComExercicios = {
+            ...categoria,
+            id: categoria.id.toString(),
+            exercicios: categoria.exercicios.map((exercicio) => ({
+                id: exercicio.id.toString(),
+                nome: exercicio.nome
+            }))
+
+        }
+        return categoriaSafe
+
+
+    } catch (err) {
+        console.log('[CATEGORIA_GET]', err)
+        return false
+    }
+}
+
 
 export default async function CategoryIdPage({ params }: { params: { categoriaId: string } }) {
     const exercicios = await getExercicios()
+    const currentCategoria = await getCurrentCategory(params.categoriaId)
 
 
-
-    return (
-        <div className="container">
-            <div className="flex justify-around">
-                <div>
-                    <span>Exercícios</span>
-                </div>
-                <div className="flex flex-col gap-3">
-                    <span>Adicionar o Exercício</span>
-                    {exercicios &&
-                        <div>
-                            <ComboboxExercicios exercicios={exercicios} />
-                        </div>
-                    }
-                </div>
-            </div>
-        </div>
-    )
+    if (exercicios && currentCategoria) {
+        return <SistemaDeCategorias exercicios={exercicios} currentCategoria={currentCategoria} />
+    } else {
+        return <div>Problema com o banco de dados</div>
+    }
 }

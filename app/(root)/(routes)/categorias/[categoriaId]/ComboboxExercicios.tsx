@@ -17,41 +17,36 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover"
 import { SafeExercicio } from "@/types"
-import { useState } from "react"
+import { Dispatch, SetStateAction, useState } from "react"
 
 
 interface ComboboxExerciciosProps {
     exercicios: SafeExercicio[]
+    value: string
+    setValue: Dispatch<SetStateAction<string>>,
+    disabled?: boolean
 }
 
 export function ComboboxExercicios({
-    exercicios
+    exercicios,
+    setValue,
+    value,
+    disabled
 }: ComboboxExerciciosProps) {
     const [open, setOpen] = useState(false)
-    const [value, setValue] = useState("")
-    console.log(value)
-    const frameworks = [
-        {
-            value: exercicios[0].id,
-            label: exercicios[0].nome,
-        },
-        {
-            value: exercicios[1].id,
-            label: exercicios[1].nome,
-        },
-    ]
 
     return (
         <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
                 <Button
+                    disabled={disabled}
                     variant="outline"
                     role="combobox"
                     aria-expanded={open}
                     className="w-[230px] justify-between"
                 >
                     {value
-                        ? frameworks.find((framework) => framework.value === value)?.label
+                        ? exercicios.find((exercicio) => exercicio.id === value)?.nome
                         : "Selecione o exercício..."}
                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
@@ -61,24 +56,22 @@ export function ComboboxExercicios({
                     <CommandInput placeholder="Procurar exercício..." />
                     <CommandEmpty>Nenhum exercício encontrado.</CommandEmpty>
                     <CommandGroup>
-                        {frameworks.map((framework) => (
+                        {exercicios.map((exercicio) => (
                             <CommandItem
-                                key={framework.value}
+                                key={exercicio.id}
                                 onSelect={(currentValue) => {
-                                    console.log(currentValue)
                                     setValue(currentValue === value ? "" : currentValue)
                                     setOpen(false)
-                                    console.log('clocou')
                                 }}
-                                value={framework.value}
+                                value={exercicio.id}
                             >
                                 <Check
                                     className={cn(
                                         "mr-2 h-4 w-4",
-                                        value === framework.value ? "opacity-100" : "opacity-0"
+                                        value === exercicio.id ? "opacity-100" : "opacity-0"
                                     )}
                                 />
-                                {framework.label}
+                                {exercicio.nome}
                             </CommandItem>
                         ))}
                     </CommandGroup>

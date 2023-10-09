@@ -26,3 +26,12 @@ export type SafeCategoria = Omit<
 > & {
     id: string;
 }
+export type SafeCategoriaComExercicios = {
+    id: string;
+    nome: string;
+    descricao: string;
+    exercicios: {
+        id: string;
+        nome: string;
+    }[];
+}

@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button"
 import prismadb from "@/lib/prismadb"
 import { auth } from "@clerk/nextjs"
 import Image from 'next/image'
@@ -33,7 +32,7 @@ export default async function page({ params }: { params: { exercicioId: string }
         if (!exercicio) return (<div>Id do exercício inválido</div>)
 
         return (
-            <div className="container mb-16">
+            <div className="container">
                 <div className="flex flex-col justify-center items-center gap-10">
                     <span className="font-semibold text-2xl text-gray-500 drop-shadow-md">{exercicio.nome}</span>
 
