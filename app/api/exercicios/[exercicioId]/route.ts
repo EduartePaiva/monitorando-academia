@@ -1,5 +1,6 @@
 import prismadb from "@/lib/prismadb"
 import { exercicioFormSchema } from "@/lib/zodSchemas"
+import { SafeExercicio } from "@/types"
 import { auth } from "@clerk/nextjs"
 import { NextResponse } from "next/server"
 
@@ -14,6 +15,8 @@ export async function PATCH(
         const body = await request.json()
         const date = exercicioFormSchema.parse(body)
 
+        const categoriaId = (date.categoriaId === undefined) ? undefined : BigInt(date.categoriaId)
+
         const exercicio = await prismadb.exercicio.update({
             where: {
                 id: BigInt(params.exercicioId),
@@ -22,15 +25,28 @@ export async function PATCH(
             data: {
                 userId,
                 descricao: date.descricao,
-                dia_da_semana: parseInt(date.dia_da_semana),
+                dia_da_semana: typeof (date.dia_da_semana) === 'number' ? date.dia_da_semana : parseInt(date.dia_da_semana),
                 nome: date.nome,
-                imagem_url: date.imageUrl
+                imagem_url: date.imageUrl,
+                categoriaId
+            },
+            select: {
+                categoriaId: true,
+                descricao: true,
+                dia_da_semana: true,
+                id: true,
+                imagem_url: true,
+                nome: true
             }
         })
-        return NextResponse.json({
+
+        const exercicioSafe: SafeExercicio = {
             ...exercicio,
-            id: exercicio.id.toString()
-        })
+            id: exercicio.id.toString(),
+            categoriaId: exercicio.categoriaId?.toString(),
+        }
+
+        return NextResponse.json(exercicioSafe, { status: 200 })
     } catch (err) {
         console.log('[EXERCICIO_PATCH]', err)
         return new NextResponse("Internal error", { status: 500 })

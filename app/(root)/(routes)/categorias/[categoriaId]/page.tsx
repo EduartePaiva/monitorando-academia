@@ -66,7 +66,6 @@ async function getCurrentCategory(categoryId: string) {
                         id: true,
                         nome: true
                     }
-
                 }
             }
         })
@@ -99,7 +98,7 @@ export default async function CategoryIdPage({ params }: { params: { categoriaId
 
 
     if (exercicios && currentCategoria) {
-        return <SistemaDeCategorias exercicios={exercicios} currentCategoria={currentCategoria} />
+        return <SistemaDeCategorias InitialExercicios={exercicios} currentCategoria={currentCategoria} />
     } else {
         return <div>Problema com o banco de dados</div>
     }

@@ -60,7 +60,7 @@ export async function POST(request: Request) {
             data: {
                 userId,
                 descricao: date.descricao,
-                dia_da_semana: parseInt(date.dia_da_semana),
+                dia_da_semana: typeof (date.dia_da_semana) === 'number' ? date.dia_da_semana : parseInt(date.dia_da_semana),
                 nome: date.nome,
                 imagem_url: date.imageUrl
             },
