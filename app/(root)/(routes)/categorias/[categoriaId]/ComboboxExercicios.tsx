@@ -1,7 +1,6 @@
 "use client"
 
 import { Check, ChevronsUpDown } from "lucide-react"
-
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -18,6 +17,7 @@ import {
 } from "@/components/ui/popover"
 import { SafeExercicio } from "@/types"
 import { Dispatch, SetStateAction, useState } from "react"
+import '@/prototype/string.extensions'
 
 
 interface ComboboxExerciciosProps {
@@ -45,8 +45,9 @@ export function ComboboxExercicios({
                     aria-expanded={open}
                     className="w-[230px] justify-between"
                 >
+                    {/* Aqui eu utilizo o split para pegar o id do item selecionado */}
                     {value
-                        ? exercicios.find((exercicio) => exercicio.id === value)?.nome
+                        ? exercicios.find((exercicio) => exercicio.id === value.split('&-&')[1])?.nome
                         : "Selecione o exercício..."}
                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
@@ -63,9 +64,10 @@ export function ComboboxExercicios({
                                     setValue(currentValue === value ? "" : currentValue)
                                     setOpen(false)
                                 }}
-                                value={exercicio.id}
+                                value={`${exercicio.nome}&-&${exercicio.id}`}
                                 title={exercicio.nome}
                             >
+                                {/* Aqui acima eu coloquei &-& como separador do nome e do id, isto foi feito para dar a volta em uma limitação da biblioteca utilizada */}
                                 <Check
                                     className={cn(
                                         "mr-2 h-4 w-4",

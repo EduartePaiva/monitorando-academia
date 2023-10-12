@@ -8,6 +8,7 @@ import toast from "react-hot-toast"
 import axios from "axios"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { Trash, X } from "lucide-react"
+import '@/prototype/string.extensions'
 
 interface SistemaDeCategoriasProps {
     currentCategoria: SafeCategoriaComExercicios
@@ -18,6 +19,7 @@ export default function SistemaDeCategorias({
     currentCategoria,
     InitialExercicios
 }: SistemaDeCategoriasProps) {
+
     const [exercicioSelecionado, setExercicioSelecionado] = useState("")
 
     const { data: exerciciosQuery } = useQuery({
@@ -33,13 +35,13 @@ export default function SistemaDeCategorias({
     const { mutate: addExercicioButton, isLoading: atualizandoExercicio } = useMutation({
         mutationKey: ["exercicios"],
         mutationFn: async () => {
-            const exercicioData = exerciciosQuery.find((exercicio) => exercicio.id === exercicioSelecionado)
+            const exercicioData = exerciciosQuery.find((exercicio) => exercicio.id === exercicioSelecionado.getIdFromExercicio())
             if (exercicioData) {
                 const newExercicio: SafeExercicio = {
                     ...exercicioData,
                     categoriaId: currentCategoria.id
                 }
-                const response = await axios.patch(`/api/exercicios/${exercicioSelecionado}`, newExercicio)
+                const response = await axios.patch(`/api/exercicios/${exercicioSelecionado.getIdFromExercicio()}`, newExercicio)
                 if (response.status === 200) {
 
                     //aqui atualiza as informações sem precisar recriar o objeto
@@ -109,7 +111,7 @@ export default function SistemaDeCategorias({
                                 disabled={atualizandoExercicio}
                             />
                         </div>
-                        <Button disabled={exercicioSelecionado === '' || atualizandoExercicio} onClick={() => addExercicioButton()}>Acidionar Exercicio</Button>
+                        <Button disabled={exercicioSelecionado.getIdFromExercicio() === '' || atualizandoExercicio} onClick={() => addExercicioButton()}>Acidionar Exercicio</Button>
                     </div>
                 </div>
             </div>
