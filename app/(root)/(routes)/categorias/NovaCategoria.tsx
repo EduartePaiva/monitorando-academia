@@ -15,7 +15,7 @@ export default function NovaCategoria({ className }: { className: string }) {
     return (
         <div className={className}>
             <Modal
-                description="Cria uma categoria"
+                description="Criar uma categoria"
                 isOpen={isOpen}
                 onClose={onClose}
                 title="Categoria"

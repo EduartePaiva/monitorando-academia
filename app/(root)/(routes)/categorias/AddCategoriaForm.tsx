@@ -1,9 +1,12 @@
+'use client'
+
 import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { categoriaFormSchema } from "@/lib/zodSchemas"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useQueryClient } from "@tanstack/react-query"
 import axios from "axios"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
@@ -20,7 +23,7 @@ export default function AddEditCategoriaForm({
 
 }: AddCategoriaFormProps) {
     const [isLoading, setIsLoading] = useState(false)
-    const router = useRouter()
+    const queryClient = useQueryClient()
 
 
     const form = useForm<z.infer<typeof categoriaFormSchema>>({
@@ -38,7 +41,7 @@ export default function AddEditCategoriaForm({
 
             if (status === 200) {
                 toast.success("Categoria adicionada com sucesso!")
-                router.refresh()
+                queryClient.invalidateQueries(["categorias"])
                 onClose()
             } else {
                 console.log(status)
@@ -88,7 +91,7 @@ export default function AddEditCategoriaForm({
 
 
                 <div className="flex justify-around">
-                    <Button disabled={isLoading} variant="outline" type='submit' className="">Enviar</Button>
+                    <Button disabled={isLoading} variant="outline" type='submit' className="">Criar</Button>
                     <Button disabled={isLoading} onClick={(e) => { e.preventDefault(); onClose(); }}>Cancelar</Button>
 
                 </div>

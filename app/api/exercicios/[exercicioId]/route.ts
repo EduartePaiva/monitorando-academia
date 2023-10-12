@@ -15,7 +15,7 @@ export async function PATCH(
         const body = await request.json()
         const date = exercicioFormSchema.parse(body)
 
-        const categoriaId = (date.categoriaId === undefined) ? undefined : BigInt(date.categoriaId)
+        const categoriaId = (date.categoriaId === undefined) ? null : BigInt(date.categoriaId)
 
         const exercicio = await prismadb.exercicio.update({
             where: {

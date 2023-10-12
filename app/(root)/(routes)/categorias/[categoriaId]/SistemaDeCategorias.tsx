@@ -6,7 +6,7 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import toast from "react-hot-toast"
 import axios from "axios"
-import { useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery } from "@tanstack/react-query"
 import { Trash, X } from "lucide-react"
 
 interface SistemaDeCategoriasProps {
@@ -19,7 +19,6 @@ export default function SistemaDeCategorias({
     InitialExercicios
 }: SistemaDeCategoriasProps) {
     const [exercicioSelecionado, setExercicioSelecionado] = useState("")
-    const [isAdding, setIsAdding] = useState(false)
 
     const { data: exerciciosQuery } = useQuery({
         queryKey: ['exercicios'],
@@ -31,37 +30,53 @@ export default function SistemaDeCategorias({
         initialData: InitialExercicios
     })
 
-
-
-    const addExercicioButton = async () => {
-        try {
-            setIsAdding(true)
-
+    const { mutate: addExercicioButton, isLoading: atualizandoExercicio } = useMutation({
+        mutationKey: ["exercicios"],
+        mutationFn: async () => {
             const exercicioData = exerciciosQuery.find((exercicio) => exercicio.id === exercicioSelecionado)
-
             if (exercicioData) {
-                exercicioData.categoriaId = currentCategoria.id
-                const response = await axios.patch(`/api/exercicios/${exercicioSelecionado}`, exercicioData)
+                const newExercicio: SafeExercicio = {
+                    ...exercicioData,
+                    categoriaId: currentCategoria.id
+                }
+                const response = await axios.patch(`/api/exercicios/${exercicioSelecionado}`, newExercicio)
                 if (response.status === 200) {
-                    //aqui é onde receberá o novo exercício
-                    const newExercicioData = response.data
-                    console.log(newExercicioData)
+
+                    //aqui atualiza as informações sem precisar recriar o objeto
+                    exercicioData.categoriaId = currentCategoria.id
                     toast.success("Exercício adicionado a categoria.")
                 } else {
                     toast.error("Erro ao adicionar o exercício, status code: " + response.status)
                 }
             }
-        } catch (err) {
+        },
+        onError: (err) => {
             toast.error("Erro ao adicionar o exercício.")
-        } finally {
-            setIsAdding(false)
         }
-    }
+    })
 
-    const removeExercicioButton = async (exercicioToRemove: SafeExercicio) => {
-        //este botão vai setar para undefined a categoriaId do exercício e depois atualizar esta informação no react query
+    const { mutate: removeExercicioButton, isLoading: isRemovingExercicio } = useMutation({
+        mutationKey: ["exercicios"],
+        mutationFn: async (exercicioToRemove: SafeExercicio) => {
+            //este botão vai setar para undefined a categoriaId do exercício e depois atualizar esta informação no react query
+            const exercicioToRemoveCopy = { ...exercicioToRemove }
 
-    }
+            exercicioToRemoveCopy.categoriaId = undefined
+            const response = await axios.patch(`/api/exercicios/${exercicioToRemoveCopy.id}`, exercicioToRemoveCopy)
+            if (response.status === 200) {
+
+                //aqui atualiza as informações sem precisar recriar o objeto
+                exercicioToRemove.categoriaId = undefined
+                toast.success("Exercício removido da categoria.")
+            } else {
+                toast.error("Erro ao remover o exercício, status code: " + response.status)
+            }
+        },
+        onError: (err) => {
+            toast.error("Erro ao remover o exercício.")
+        }
+    })
+
 
 
     return (
@@ -76,9 +91,9 @@ export default function SistemaDeCategorias({
                         {exerciciosQuery
                             .filter((query) => query.categoriaId === currentCategoria.id)
                             .map((query, index) => (
-                                <div className="flex gap-3 items-center justify-between">
+                                <div key={index} className="flex gap-3 items-center justify-between">
                                     <span key={index}>{query.nome}</span>
-                                    <Button onClick={() => removeExercicioButton(query)} variant={'outline'} size={"icon"}><Trash size={18} /></Button>
+                                    <Button disabled={isRemovingExercicio} onClick={() => removeExercicioButton(query)} variant={'outline'} size={"icon"}><Trash size={18} /></Button>
                                 </div>
                             ))
                         }
@@ -91,10 +106,10 @@ export default function SistemaDeCategorias({
                                 exercicios={exerciciosQuery}
                                 setValue={setExercicioSelecionado}
                                 value={exercicioSelecionado}
-                                disabled={isAdding}
+                                disabled={atualizandoExercicio}
                             />
                         </div>
-                        <Button disabled={exercicioSelecionado === '' || isAdding} onClick={addExercicioButton}>Acidionar Exercicio</Button>
+                        <Button disabled={exercicioSelecionado === '' || atualizandoExercicio} onClick={() => addExercicioButton()}>Acidionar Exercicio</Button>
                     </div>
                 </div>
             </div>

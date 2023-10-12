@@ -64,6 +64,7 @@ export function ComboboxExercicios({
                                     setOpen(false)
                                 }}
                                 value={exercicio.id}
+                                title={exercicio.nome}
                             >
                                 <Check
                                     className={cn(
