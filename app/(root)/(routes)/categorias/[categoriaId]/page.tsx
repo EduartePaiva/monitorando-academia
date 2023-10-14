@@ -58,33 +58,17 @@ async function getCurrentCategory(categoryId: string) {
                 descricao: true,
                 id: true,
                 nome: true,
-                exercicios: {
-                    where: {
-                        categoriaId: BigInt(categoryId)
-                    },
-                    select: {
-                        id: true,
-                        nome: true
-                    }
-                }
             }
         })
 
         if (categoria === null) return false
 
         console.log("CATEGORIA_GET")
-        const categoriaSafe: SafeCategoriaComExercicios = {
+        const categoriaSafe: SafeCategoria = {
             ...categoria,
-            id: categoria.id.toString(),
-            exercicios: categoria.exercicios.map((exercicio) => ({
-                id: exercicio.id.toString(),
-                nome: exercicio.nome
-            }))
-
+            id: categoria.id.toString()
         }
         return categoriaSafe
-
-
     } catch (err) {
         console.log('[CATEGORIA_GET]', err)
         return false
@@ -96,9 +80,8 @@ export default async function CategoryIdPage({ params }: { params: { categoriaId
     const exercicios = await getExercicios()
     const currentCategoria = await getCurrentCategory(params.categoriaId)
 
-
     if (exercicios && currentCategoria) {
-        return <SistemaDeCategorias InitialExercicios={exercicios} currentCategoria={currentCategoria} />
+        return <SistemaDeCategorias initialExercicios={exercicios} initialCategoria={currentCategoria} />
     } else {
         return <div>Problema com o banco de dados</div>
     }

@@ -74,7 +74,9 @@ export function ComboboxExercicios({
                                         value === exercicio.id ? "opacity-100" : "opacity-0"
                                     )}
                                 />
-                                {exercicio.nome}
+                                <span className={exercicio.categoriaId ? "text-gray-500" : ""}>
+                                    {exercicio.nome}
+                                </span>
                             </CommandItem>
                         ))}
                     </CommandGroup>

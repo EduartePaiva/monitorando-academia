@@ -1,6 +1,6 @@
 'use client'
 
-import { SafeCategoriaComExercicios, SafeExercicio } from "@/types"
+import { SafeCategoria, SafeExercicio } from "@/types"
 import { ComboboxExercicios } from "./ComboboxExercicios"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
@@ -9,16 +9,24 @@ import axios from "axios"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { Trash, X } from "lucide-react"
 import '@/prototype/string.extensions'
+import { Modal } from "@/components/modalDialog"
+import EditCategoriaForm from "./EditCategoriaForm"
+import ExcluirCategoria from "./ExcluirCategoria"
+import { useRouter } from "next/navigation"
 
 interface SistemaDeCategoriasProps {
-    currentCategoria: SafeCategoriaComExercicios
-    InitialExercicios: SafeExercicio[]
+    initialCategoria: SafeCategoria
+    initialExercicios: SafeExercicio[]
 }
 
 export default function SistemaDeCategorias({
-    currentCategoria,
-    InitialExercicios
+    initialCategoria,
+    initialExercicios
 }: SistemaDeCategoriasProps) {
+    const [isEdit, setIsEdit] = useState(false)
+    const [isDelete, setIsDelete] = useState(false)
+    const [isDeleteing, setIsDeleteing] = useState(false)
+    const router = useRouter()
 
     const [exercicioSelecionado, setExercicioSelecionado] = useState("")
 
@@ -29,7 +37,7 @@ export default function SistemaDeCategorias({
             const data = await response.data as SafeExercicio[]
             return data
         },
-        initialData: InitialExercicios
+        initialData: initialExercicios
     })
 
     const { mutate: addExercicioButton, isLoading: atualizandoExercicio } = useMutation({
@@ -39,13 +47,13 @@ export default function SistemaDeCategorias({
             if (exercicioData) {
                 const newExercicio: SafeExercicio = {
                     ...exercicioData,
-                    categoriaId: currentCategoria.id
+                    categoriaId: initialCategoria.id
                 }
                 const response = await axios.patch(`/api/exercicios/${exercicioSelecionado.getIdFromExercicio()}`, newExercicio)
                 if (response.status === 200) {
 
                     //aqui atualiza as informações sem precisar recriar o objeto
-                    exercicioData.categoriaId = currentCategoria.id
+                    exercicioData.categoriaId = initialCategoria.id
                     toast.success("Exercício adicionado a categoria.")
                 } else {
                     toast.error("Erro ao adicionar o exercício, status code: " + response.status)
@@ -79,19 +87,71 @@ export default function SistemaDeCategorias({
         }
     })
 
+    const onCloseEdit = () => setIsEdit(false)
+    const onCloseDelete = () => setIsDelete(false)
 
+    const confirmDelete = async (categoriaId: string) => {
+        //não posso apenas excluir no mesmo botão?
+        console.log(categoriaId)
+
+        try {
+            setIsDeleteing(true)
+            const { status } = await axios.delete(`/api/categorias/${categoriaId}`)
+
+            if (status === 202) {
+                toast.success("Categoria excluída!")
+                onCloseDelete()
+                router.push('/categorias')
+            } else {
+                toast.error("Algum erro ocorreu na exclusão.")
+            }
+        } catch (err) {
+            toast.error("Algum erro ocoddeu na exclusão.")
+        } finally {
+            setIsDeleteing(false)
+        }
+    }
 
     return (
         <div className="container">
+            {/* Modal que edita */}
+            <Modal
+                description="Edite a categoria"
+                isOpen={isEdit}
+                onClose={onCloseEdit}
+                title="Categoria"
+                children={
+                    <EditCategoriaForm
+                        onClose={onCloseEdit}
+                        descricao={initialCategoria.descricao}
+                        id={initialCategoria.id}
+                        nome={initialCategoria.nome}
+                    />}
+            />
+            <Modal
+                description="Tem certeza que deseja excluir a categoria?"
+                isOpen={isDelete}
+                onClose={onCloseDelete}
+                title="Excluir a categoria"
+                children={
+                    <ExcluirCategoria
+                        onClose={onCloseDelete}
+                        confirmDelete={confirmDelete}
+                        isDeleting={isDeleteing}
+                        id={initialCategoria.id}
+                    />
+                }
+            />
+
             <div className="flex flex-col justify-center items-center gap-10">
 
-                <span className="font-semibold text-2xl text-gray-500 drop-shadow-md">{currentCategoria.nome}</span>
+                <span className="font-semibold text-2xl text-gray-500 drop-shadow-md">{initialCategoria.nome}</span>
 
                 <div className="flex w-full justify-around">
                     <div className="flex flex-col gap-4">
                         <span className="font-medium">Exercícios:</span>
                         {exerciciosQuery
-                            .filter((query) => query.categoriaId === currentCategoria.id)
+                            .filter((query) => query.categoriaId === initialCategoria.id)
                             .map((query, index) => (
                                 <div key={index} className="flex gap-3 items-center justify-between">
                                     <span key={index}>{query.nome}</span>

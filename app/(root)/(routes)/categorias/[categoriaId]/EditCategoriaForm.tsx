@@ -14,16 +14,20 @@ import { useForm } from "react-hook-form"
 import toast from "react-hot-toast"
 import * as z from 'zod'
 
-interface AddCategoriaFormProps {
+interface EditCategoriaFormProps {
     onClose: () => void
-    categoriaEdit?: SafeCategoria
+    nome: string,
+    descricao: string,
+    id: string
+
 }
 
 export default function EditCategoriaForm({
     onClose,
-    categoriaEdit
-
-}: AddCategoriaFormProps) {
+    descricao,
+    id,
+    nome
+}: EditCategoriaFormProps) {
     const [isLoading, setIsLoading] = useState(false)
     const queryClient = useQueryClient()
 
@@ -31,15 +35,15 @@ export default function EditCategoriaForm({
     const form = useForm<z.infer<typeof categoriaFormSchema>>({
         resolver: zodResolver(categoriaFormSchema),
         defaultValues: {
-            descricao: categoriaEdit?.descricao,
-            nome: categoriaEdit?.nome
+            descricao,
+            nome
         }
     })
 
     const onSubmit = async (dados: z.infer<typeof categoriaFormSchema>) => {
         try {
             setIsLoading(true)
-            const response = await axios.patch(`/api/categorias/${categoriaEdit?.id}`, dados)
+            const response = await axios.patch(`/api/categorias/${id}`, dados)
             const data: SafeCategoria = response.data
             if (response.status === 200) {
                 toast.success("Categoria adicionada com sucesso!")

@@ -1,21 +1,15 @@
 'use client'
 
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { SafeCategoria } from "@/types";
-import { PenSquare, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 interface CategoriaCardProps {
     categoria: SafeCategoria
-    editButton: (categoriaId: SafeCategoria) => void
-    deleteButton: (categoriaId: SafeCategoria) => void
 }
 
 export default function CategoriaCard({
-    categoria,
-    editButton,
-    deleteButton
+    categoria
 }: CategoriaCardProps) {
     const router = useRouter()
 
@@ -28,11 +22,10 @@ export default function CategoriaCard({
         >
             <CardHeader className="items-center">
                 <CardTitle>{categoria.nome}</CardTitle>
-                <CardDescription>{categoria.descricao}</CardDescription>
             </CardHeader>
-            <CardContent className="flex justify-end gap-2">
-                <Button onClick={() => editButton(categoria)} size="icon" variant={"outline"}><PenSquare size={18} /></Button>
-                <Button onClick={() => deleteButton(categoria)} size="icon"><Trash size={18} /></Button>
+
+            <CardContent className="flex justify-center gap-2">
+                <CardDescription className="text-md">{categoria.descricao}</CardDescription>
             </CardContent>
         </Card>
 
