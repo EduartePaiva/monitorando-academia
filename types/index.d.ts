@@ -10,8 +10,6 @@ export interface exercicioGet {
     categoriaId: bigint | null;
 }
 
-
-
 export type SafeExercicio = Omit<
     Exercicio,
     "id" | "categoriaId" | "updatedAt" | "createdAt" | "userId"
@@ -34,4 +32,20 @@ export type SafeCategoriaComExercicios = {
         id: string;
         nome: string;
     }[];
+}
+
+export interface Serie {
+    id: string;
+    registreDiaId: string
+    numeroDeRepeticoes: number,
+    carga: number
+}
+
+export interface RegistreDiaDados {
+    id: string
+    userId: string
+    exercicioId: string
+    numeroDeSeries: number;
+    series: Serie[]
+    //nesta parte eu vou utilizar json.stringfy para salvar series em json.
 }

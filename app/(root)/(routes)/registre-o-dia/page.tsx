@@ -2,15 +2,10 @@ import prismadb from "@/lib/prismadb";
 import RegistreDiaPage from "./RegistreDiaPage";
 import { auth } from "@clerk/nextjs";
 
-
-
 export default async function PaginaInicial() {
     try {
         const { userId } = auth()
-
         if (userId === null) return <span>Não autorizado.</span>
-
-
         const exerciciosPrisma = await prismadb.exercicio.findMany({
             where: {
                 userId,
@@ -44,15 +39,8 @@ export default async function PaginaInicial() {
             id: categoria.id.toString()
         }))
 
-        return (
-            <>
-                <RegistreDiaPage categorias={categoriasSafe} exercicios={exerciciosSafe} />
-            </>
-        )
+        return <RegistreDiaPage categorias={categoriasSafe} exercicios={exerciciosSafe} />
     } catch (err) {
         return <span>Erro no banco de dados, tente recarregar a página</span>
     }
-
-
-
 }

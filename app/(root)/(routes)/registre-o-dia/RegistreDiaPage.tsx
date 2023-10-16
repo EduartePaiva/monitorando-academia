@@ -4,8 +4,8 @@ import { ChangeEvent, useState } from "react"
 import SelectDiaDaSemana from "./SelectDiaDaSemana"
 import SelectCategoria from "./SelectCategoria"
 import SelectExercicio from "./SelectExercicio"
-import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
+import SeriesRegister from "./SeriesRegister"
 
 interface RegistreDiaPageProps {
     exercicios: {
@@ -40,6 +40,8 @@ export default function RegistreDiaPage({
         if (!isNaN(exercicioSelect) && exercicioSelect > 0 && exercicioSelect < 10) {
             setNumeroDeSeries(exercicioSelect)
             //amanhã vou fazer a animação para aparecer o número de series, vai ter um botão de enviar e quando eu selecionar o exercício o numero de series vai aparecer na tela
+        } else if (exercicioSelect === 0) {
+            setNumeroDeSeries(0)
         }
     }
 
@@ -89,6 +91,7 @@ export default function RegistreDiaPage({
                         </div>
                     </div>
                 </div>
+                <SeriesRegister numDeSeries={numeroDeSeries} />
             </div>
 
         </div>
