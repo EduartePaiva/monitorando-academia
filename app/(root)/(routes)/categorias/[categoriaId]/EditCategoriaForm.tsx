@@ -9,6 +9,7 @@ import { SafeCategoria } from "@/types"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useQueryClient } from "@tanstack/react-query"
 import axios from "axios"
+import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import toast from "react-hot-toast"
@@ -30,6 +31,7 @@ export default function EditCategoriaForm({
 }: EditCategoriaFormProps) {
     const [isLoading, setIsLoading] = useState(false)
     const queryClient = useQueryClient()
+    const router = useRouter()
 
 
     const form = useForm<z.infer<typeof categoriaFormSchema>>({
@@ -62,6 +64,7 @@ export default function EditCategoriaForm({
 
                 }
                 onClose()
+                router.refresh()
             } else {
                 console.log(response.status)
                 toast.error("Algum erro ocorreu, status: " + response.status)
