@@ -7,7 +7,6 @@ import {
     SelectTrigger,
     SelectValue
 } from "@/components/ui/select";
-import { Dispatch, SetStateAction } from "react";
 
 interface SelectExercicioProps {
     exercicios: {
@@ -20,14 +19,14 @@ interface SelectExercicioProps {
     diaDaSemana: number,
     //se nenhuma for o valor significa que todas as categorias são válidas
     categoriaId: string
-    setExercicioSelecionado: Dispatch<SetStateAction<string>>
+    handleExercicioSelecionado: (selectedExercicio: string) => void
 }
 
 export default function SelectExercicio({
     exercicios,
     categoriaId,
     diaDaSemana,
-    setExercicioSelecionado
+    handleExercicioSelecionado
 }: SelectExercicioProps) {
 
     const filteredExercicios = () => {
@@ -45,7 +44,7 @@ export default function SelectExercicio({
 
 
     return (
-        <Select onValueChange={((exercicioId) => setExercicioSelecionado(exercicioId))}>
+        <Select onValueChange={((exercicioId) => handleExercicioSelecionado(exercicioId))}>
             <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Selecione" />
             </SelectTrigger>

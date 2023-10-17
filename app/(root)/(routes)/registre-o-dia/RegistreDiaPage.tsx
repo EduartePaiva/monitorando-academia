@@ -1,11 +1,12 @@
 'use client'
 
-import { ChangeEvent, useState } from "react"
+import { ChangeEvent, useRef, useState } from "react"
 import SelectDiaDaSemana from "./SelectDiaDaSemana"
 import SelectCategoria from "./SelectCategoria"
 import SelectExercicio from "./SelectExercicio"
 import { Input } from "@/components/ui/input"
 import SeriesRegister from "./SeriesRegister"
+import { Button } from "@/components/ui/button"
 
 interface RegistreDiaPageProps {
     exercicios: {
@@ -20,7 +21,6 @@ interface RegistreDiaPageProps {
     }[]
 }
 
-
 export default function RegistreDiaPage({
     categorias,
     exercicios
@@ -34,22 +34,37 @@ export default function RegistreDiaPage({
     const [exercicioSelecionado, setExercicioSelecionado] = useState('nenhum')
 
     const [numeroDeSeries, setNumeroDeSeries] = useState(0)
+    const [showButton, setShowButton] = useState(false)
 
-    const handleInputSeries = (event: ChangeEvent<HTMLInputElement>) => {
+
+    const inputRef = useRef<HTMLInputElement>(null)
+
+    const handleExercicioSelecionado = (selectedExercicio: string) => {
+        setExercicioSelecionado(selectedExercicio)
+        setNumeroDeSeries(0)
+        setShowButton(false)
+        if (inputRef.current) inputRef.current.value = ''
+
+    }
+
+    const handleInputSeries = async (event: ChangeEvent<HTMLInputElement>) => {
         const exercicioSelect = parseInt(event.target.value)
         if (!isNaN(exercicioSelect) && exercicioSelect > 0 && exercicioSelect < 10) {
-            setNumeroDeSeries(exercicioSelect)
-            //amanhã vou fazer a animação para aparecer o número de series, vai ter um botão de enviar e quando eu selecionar o exercício o numero de series vai aparecer na tela
-        } else if (exercicioSelect === 0) {
-            setNumeroDeSeries(0)
+            for (let i = 1; i <= exercicioSelect; i++) {
+                setNumeroDeSeries(i)
+                await new Promise(resolve => {
+                    setTimeout(resolve, 200)
+                })
+            }
+            setShowButton(true)
         }
     }
 
 
     return (
-        <div className="container flex justify-around">
+        <div className="container h-full flex flex-col items-center justify-center gap-6 flex-wrap">
             <div>
-                <div className="text-lg font-semibold mb-6">
+                <div className="text-lg font-semibold mb-2">
                     Filtros
                 </div>
                 <div className="flex items-start">
@@ -68,7 +83,7 @@ export default function RegistreDiaPage({
                                 exercicios={exercicios}
                                 diaDaSemana={diaDaSemana}
                                 categoriaId={categoriaSelecionadaId}
-                                setExercicioSelecionado={setExercicioSelecionado}
+                                handleExercicioSelecionado={handleExercicioSelecionado}
                             />
                         </div>
                     </div>
@@ -76,8 +91,8 @@ export default function RegistreDiaPage({
             </div>
 
 
-            <div className={`transition-all duration-500 ${exercicioSelecionado === 'nenhum' ? "opacity-0 invisible" : "opacity-100 visible"}`}>
-                <div className="text-lg font-semibold mb-6">
+            <div className={`${exercicioSelecionado === 'nenhum' ? "hidden" : "animate-[fade-in2_500ms_forwards]"}`}>
+                <div className="text-lg font-semibold mb-2">
                     Nº De Séries
                 </div>
                 <div className="flex items-start">
@@ -87,13 +102,18 @@ export default function RegistreDiaPage({
                             <Input
                                 onChange={handleInputSeries}
                                 type="number"
+                                ref={inputRef}
                             />
                         </div>
                     </div>
                 </div>
-                <SeriesRegister numDeSeries={numeroDeSeries} />
             </div>
-
+            <SeriesRegister numDeSeries={numeroDeSeries} />
+            <Button
+                className={`${!showButton ? "hidden" : "animate-[fade-in2_500ms_forwards]"}`}
+            >
+                Registrar O Treino
+            </Button>
         </div>
     )
 }

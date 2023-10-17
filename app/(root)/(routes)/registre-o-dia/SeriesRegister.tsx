@@ -1,6 +1,5 @@
 'use client'
 
-import { Input } from "@/components/ui/input"
 import RenderSeries from "./RenderSeries"
 
 interface SeriesRegisterProps {
@@ -11,7 +10,7 @@ export default function SeriesRegister({
     numDeSeries
 }: SeriesRegisterProps) {
     return (
-        <div className="mt-10">
+        <div className="flex gap-10 flex-wrap">
             {[...Array(numDeSeries)].map((value, index) => (
                 <RenderSeries key={index} numero={index + 1} />
             ))}

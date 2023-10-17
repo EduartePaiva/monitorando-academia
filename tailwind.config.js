@@ -69,6 +69,10 @@ module.exports = {
                     '0%': { opacity: 0 },
                     '100%': { opacity: 1 }
                 },
+                "fade-in2": {
+                    '0%': { transform: 'scale(0)' },
+                    '100%': { transform: 'scale(1)' }
+                },
                 "fade-out": {
                     '100%': { opacity: 0 },
                     '0%': { opacity: 1 }

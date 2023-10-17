@@ -8,8 +8,8 @@ export default function RenderSeries({
     numero
 }: RenderSeriesProps) {
     return (
-        <div>
-            <div className="text-lg font-semibold mb-6">
+        <div className="animate-[fade-in_500ms_forwards]">
+            <div className="text-lg font-semibold mb-2">
                 {numero}ª Serie
             </div>
             <div className="flex items-start">
