@@ -52,6 +52,7 @@ export default function SelectExercicio({
             <SelectContent>
                 <SelectGroup>
                     <SelectLabel>Exercícios</SelectLabel>
+                    <SelectItem value="nenhum" >Nenhum</SelectItem>
                     {filteredExercicios().map((exercicio, index) => (
                         <SelectItem value={exercicio.id} key={index}>{exercicio.nome}</SelectItem>
                     ))}

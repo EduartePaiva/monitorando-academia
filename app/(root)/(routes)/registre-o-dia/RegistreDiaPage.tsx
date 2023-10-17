@@ -76,7 +76,7 @@ export default function RegistreDiaPage({
             </div>
 
 
-            <div>
+            <div className={`transition-all duration-500 ${exercicioSelecionado === 'nenhum' ? "opacity-0 invisible" : "opacity-100 visible"}`}>
                 <div className="text-lg font-semibold mb-6">
                     Nº De Séries
                 </div>
