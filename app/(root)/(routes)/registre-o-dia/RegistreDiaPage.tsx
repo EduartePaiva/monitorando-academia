@@ -102,6 +102,7 @@ export default function RegistreDiaPage({
                             <Input
                                 onChange={handleInputSeries}
                                 type="number"
+                                className="disable-input-arrow"
                                 ref={inputRef}
                             />
                         </div>
