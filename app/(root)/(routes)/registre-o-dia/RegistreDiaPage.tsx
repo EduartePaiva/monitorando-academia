@@ -7,6 +7,9 @@ import SelectExercicio from "./SelectExercicio"
 import { Input } from "@/components/ui/input"
 import SeriesRegister from "./SeriesRegister"
 import { Button } from "@/components/ui/button"
+import { Serie } from "@/types"
+import axios from "axios"
+import { regDiaFormSchema } from "@/lib/zodSchemas"
 
 interface RegistreDiaPageProps {
     exercicios: {
@@ -35,6 +38,9 @@ export default function RegistreDiaPage({
 
     const [numeroDeSeries, setNumeroDeSeries] = useState(0)
     const [showButton, setShowButton] = useState(false)
+    const [isSending, setIsSending] = useState(false)
+
+    const [arraySeries, setArraySeries] = useState<Serie[]>([])
 
 
     const inputRef = useRef<HTMLInputElement>(null)
@@ -57,6 +63,26 @@ export default function RegistreDiaPage({
                 })
             }
             setShowButton(true)
+        }
+    }
+
+    const handleRegOTreino = async () => {
+        try {
+            setIsSending(true)
+
+            const data = regDiaFormSchema.parse({
+                exercicioId: exercicioSelecionado,
+                numeroDeSeries: numeroDeSeries,
+                series: JSON.stringify(arraySeries),
+            })
+
+            const response = await axios.post('/api/registre-o-dia', data)
+
+
+        } catch (erro) {
+
+        } finally {
+            setIsSending(false)
         }
     }
 
@@ -109,9 +135,13 @@ export default function RegistreDiaPage({
                     </div>
                 </div>
             </div>
-            <SeriesRegister numDeSeries={numeroDeSeries} />
+            <SeriesRegister
+                numDeSeries={numeroDeSeries}
+                setArraySeries={setArraySeries}
+            />
             <Button
                 className={`${!showButton ? "hidden" : "animate-[fade-in2_500ms_forwards]"}`}
+                onClick={() => handleRegOTreino()}
             >
                 Registrar O Treino
             </Button>

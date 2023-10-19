@@ -35,8 +35,6 @@ export type SafeCategoriaComExercicios = {
 }
 
 export interface Serie {
-    id: string;
-    registreDiaId: string
     numeroDeRepeticoes: number,
     carga: number
 }

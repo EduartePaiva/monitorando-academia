@@ -1,3 +1,4 @@
+import { RegistreDia } from '@prisma/client';
 import * as z from 'zod'
 
 export const exercicioFormSchema = z.object({
@@ -15,3 +16,10 @@ export const categoriaFormSchema = z.object({
 })
 
 
+//const test:RegistreDia = {}
+
+export const regDiaFormSchema = z.object({
+    exercicioId: z.string(),
+    numeroDeSeries: z.number(),
+    series: z.string()
+})
