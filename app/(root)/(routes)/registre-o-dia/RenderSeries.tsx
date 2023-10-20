@@ -28,11 +28,11 @@ export default function RenderSeries({
                                 if (!isNaN(numReps) && numReps > 0) {
                                     setArraySerie((prevValue) => {
                                         if (prevValue[index]) {
-                                            prevValue[index].numeroDeRepeticoes = numReps
+                                            prevValue[index].reps = numReps
                                         } else {
                                             prevValue[index] = {
                                                 carga: 0,
-                                                numeroDeRepeticoes: numReps
+                                                reps: numReps
                                             }
                                         }
 
@@ -56,7 +56,7 @@ export default function RenderSeries({
                                         } else {
                                             prevValue[index] = {
                                                 carga: carga,
-                                                numeroDeRepeticoes: 0
+                                                reps: 0
                                             }
                                         }
 

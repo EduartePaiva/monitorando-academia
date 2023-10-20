@@ -34,7 +34,7 @@ export async function POST(request: Request) {
             ...registreDia,
             id: registreDia.id.toString(),
             exercicioId: registreDia.exercicioId.toString()
-        })
+        }, { status: 200 })
 
     } catch (err) {
         console.log('[REGISTREODIA_POST]', err)

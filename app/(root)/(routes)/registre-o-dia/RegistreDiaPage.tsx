@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button"
 import { Serie } from "@/types"
 import axios from "axios"
 import { regDiaFormSchema } from "@/lib/zodSchemas"
+import toast from "react-hot-toast"
 
 interface RegistreDiaPageProps {
     exercicios: {
@@ -30,25 +31,20 @@ export default function RegistreDiaPage({
 }: RegistreDiaPageProps) {
     // 0 é igual a segunda, 6 é domingo, 7 são todos os dias
     const [diaDaSemana, setDiaDaSemana] = useState(7)
-
     //se nenhuma for o valor significa que todas as categorias são válidas
     const [categoriaSelecionadaId, setCategoriaSelecionadaId] = useState('nenhuma')
-
     const [exercicioSelecionado, setExercicioSelecionado] = useState('nenhum')
-
     const [numeroDeSeries, setNumeroDeSeries] = useState(0)
+    const [arraySeries, setArraySeries] = useState<Serie[]>([])
     const [showButton, setShowButton] = useState(false)
     const [isSending, setIsSending] = useState(false)
-
-    const [arraySeries, setArraySeries] = useState<Serie[]>([])
-
-
     const inputRef = useRef<HTMLInputElement>(null)
 
     const handleExercicioSelecionado = (selectedExercicio: string) => {
         setExercicioSelecionado(selectedExercicio)
         setNumeroDeSeries(0)
         setShowButton(false)
+        setArraySeries([])
         if (inputRef.current) inputRef.current.value = ''
 
     }
@@ -56,13 +52,14 @@ export default function RegistreDiaPage({
     const handleInputSeries = async (event: ChangeEvent<HTMLInputElement>) => {
         const exercicioSelect = parseInt(event.target.value)
         if (!isNaN(exercicioSelect) && exercicioSelect > 0 && exercicioSelect < 10) {
-            for (let i = 1; i <= exercicioSelect; i++) {
+            for (let i = 0; i <= exercicioSelect; i++) {
                 setNumeroDeSeries(i)
                 await new Promise(resolve => {
                     setTimeout(resolve, 200)
                 })
             }
             setShowButton(true)
+            setArraySeries([])
         }
     }
 
@@ -70,17 +67,39 @@ export default function RegistreDiaPage({
         try {
             setIsSending(true)
 
-            const data = regDiaFormSchema.parse({
-                exercicioId: exercicioSelecionado,
-                numeroDeSeries: numeroDeSeries,
-                series: JSON.stringify(arraySeries),
-            })
+            const thereIsData = arraySeries[0] && arraySeries[0].carga > 0 && arraySeries[0].reps > 0 &&
+                exercicioSelecionado !== 'nenhum' && numeroDeSeries > 0
 
-            const response = await axios.post('/api/registre-o-dia', data)
+            if (thereIsData) {
+                console.log('foi aqui')
+                const data = regDiaFormSchema.parse({
+                    exercicioId: exercicioSelecionado,
+                    numeroDeSeries: numeroDeSeries,
+                    series: JSON.stringify(arraySeries),
+                })
 
+                const response = await axios.post('/api/registre-o-dia', data)
+
+                if (response.status === 200) {
+                    toast.success('Treino registrado com sucesso!')
+
+                    //aqui eu estou resetando todos os states
+                    setArraySeries([])
+                    setCategoriaSelecionadaId('nenhuma')
+                    setExercicioSelecionado('nenhum')
+                    setNumeroDeSeries(0)
+                    setShowButton(false)
+                    setDiaDaSemana(7)
+
+                } else {
+                    toast.error("Erro ao registrar o treino!")
+                }
+            } else {
+                toast.error("Você não preencheu alguma coisa, confita o preenchimento.")
+            }
 
         } catch (erro) {
-
+            toast.error("Erro ao registrar o treino!")
         } finally {
             setIsSending(false)
         }
@@ -142,6 +161,7 @@ export default function RegistreDiaPage({
             <Button
                 className={`${!showButton ? "hidden" : "animate-[fade-in2_500ms_forwards]"}`}
                 onClick={() => handleRegOTreino()}
+                disabled={isSending}
             >
                 Registrar O Treino
             </Button>

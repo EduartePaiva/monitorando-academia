@@ -20,6 +20,6 @@ export const categoriaFormSchema = z.object({
 
 export const regDiaFormSchema = z.object({
     exercicioId: z.string(),
-    numeroDeSeries: z.number(),
-    series: z.string()
+    numeroDeSeries: z.number().gte(1).lte(9),
+    series: z.string().min(22).max(208)
 })

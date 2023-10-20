@@ -35,7 +35,7 @@ export type SafeCategoriaComExercicios = {
 }
 
 export interface Serie {
-    numeroDeRepeticoes: number,
+    reps: number,
     carga: number
 }
 
