@@ -46,18 +46,56 @@ export default function ExerciciosPage() {
 
             {dias_da_semana.map((dia, index) => (
                 <div className="flex flex-col items-center w-28" key={index}>
-                    <span className="w-full leading-[3rem] h-12 text-center bg-gray-100 font-semibold text-gray-800">
+                    <span className={`
+                        w-full 
+                        leading-[3rem] 
+                        h-12 
+                        text-center 
+                        bg-gray-100 
+                        font-semibold 
+                        text-gray-800 
+                        border-2
+                    `}>
                         {dia}
                     </span>
                     {data && data.filter((exercicio) => exercicio.dia_da_semana === index).map((exercicio) => (
-                        <Link href={`/exercicios/${exercicio.id}`} key={exercicio.id} className="flex w-full justify-center items-center h-12 bg-gray-50 hover:bg-gray-800 hover:text-white transition duration-300">
+                        <Link
+                            href={`/exercicios/${exercicio.id}`}
+                            key={exercicio.id}
+                            className={`
+                                flex 
+                                w-full 
+                                justify-center 
+                                items-center
+                                h-12 
+                                text-center 
+                                bg-gray-50
+                                hover:bg-gray-800 
+                                hover:text-white
+                                transition 
+                                duration-300
+                                border-2
+                            `}
+                        >
                             {exercicio.nome}
                         </Link>
                     ))}
 
                     {/* coisas podem ser infinitamente adicionadas aqui */}
                     <button
-                        className="flex w-full justify-center items-center h-12 bg-gray-50 hover:bg-gray-800 hover:text-white transition duration-300"
+                        className={`
+                            border-2
+                            flex
+                            w-full 
+                            justify-center 
+                            items-center 
+                            h-12 
+                            bg-gray-50 
+                            hover:bg-gray-800
+                            hover:text-white 
+                            transition 
+                            duration-300
+                        `}
                         onClick={() => handleOnClick(index)}
                     >
                         <Plus size={30} />

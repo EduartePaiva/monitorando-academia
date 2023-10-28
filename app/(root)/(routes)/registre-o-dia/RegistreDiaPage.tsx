@@ -85,11 +85,9 @@ export default function RegistreDiaPage({
 
                     //aqui eu estou resetando todos os states
                     setArraySeries([])
-                    setCategoriaSelecionadaId('nenhuma')
                     setExercicioSelecionado('nenhum')
                     setNumeroDeSeries(0)
                     setShowButton(false)
-                    setDiaDaSemana(7)
 
                 } else {
                     toast.error("Erro ao registrar o treino!")
