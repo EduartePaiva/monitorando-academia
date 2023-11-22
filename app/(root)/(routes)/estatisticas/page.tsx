@@ -1,5 +1,10 @@
+import CategorySelect from "./CategorySelect";
+
 export default function EstatisticasPage() {
     return (
-        <div>EstatisticasPage</div>
+        <div>
+            <div>Categoria </div>
+            <CategorySelect />
+        </div>
     )
 }
