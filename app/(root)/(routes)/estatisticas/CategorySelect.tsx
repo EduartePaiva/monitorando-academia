@@ -1,20 +1,24 @@
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { SafeCategoria } from "@/types";
 
+interface CategorySelectProps {
+    categorias: SafeCategoria[]
+}
 
-export default function CategorySelect() {
+export default function CategorySelect({
+    categorias
+}: CategorySelectProps) {
     return (
-        <Select>
+        <Select defaultValue="all">
             <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Select a fruit" />
+                <SelectValue placeholder="" />
             </SelectTrigger>
             <SelectContent>
                 <SelectGroup>
-                    <SelectLabel>Fruits</SelectLabel>
-                    <SelectItem value="apple">Apple</SelectItem>
-                    <SelectItem value="banana">Banana</SelectItem>
-                    <SelectItem value="blueberry">Blueberry</SelectItem>
-                    <SelectItem value="grapes">Grapes</SelectItem>
-                    <SelectItem value="pineapple">Pineapple</SelectItem>
+                    <SelectItem value="all">Todas</SelectItem>
+                    {categorias.map((categoria, index) => (
+                        <SelectItem key={index} value={categoria.id}>{categoria.nome}</SelectItem>
+                    ))}
                 </SelectGroup>
             </SelectContent>
         </Select>
