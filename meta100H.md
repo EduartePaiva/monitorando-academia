@@ -3,3 +3,5 @@
 > dia 17 10 minutos
 
 > dia 22 3 horas
+
+> dia 24 13: 43 a 16:40

@@ -12,6 +12,7 @@ import {
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 import faker from 'faker';
+import { ScoreReturn } from '@/types';
 
 ChartJS.register(
     CategoryScale,
@@ -36,22 +37,19 @@ export const options = {
     },
 };
 
-const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
-
-export const data = {
-    labels,
-    datasets: [
-        {
-            label: 'Score',
-            data: labels.map(() => faker.datatype.number({ min: 0, max: 500 })),
-            borderColor: 'rgb(255, 99, 132)',
-            backgroundColor: 'rgba(255, 99, 132, 0.5)',
-        }
-    ],
-};
-
+export default function LineChart({ dados }: { dados: ScoreReturn[] }) {
+    const data = {
+        labels: dados.map((dado) => dado.label),
+        datasets: [
+            {
+                label: 'Score',
+                data: dados.map((dado) => dado.data),
+                borderColor: 'rgb(255, 99, 132)',
+                backgroundColor: 'rgba(255, 99, 132, 0.5)',
+            }
+        ],
+    };
 
 
-export default function LineChart() {
     return <Line options={options} data={data} />;
 }

@@ -47,3 +47,8 @@ export interface RegistreDiaDados {
     series: Serie[]
     //nesta parte eu vou utilizar json.stringfy para salvar series em json.
 }
+
+export interface ScoreReturn {
+    label: string
+    data: number
+}
