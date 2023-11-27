@@ -38,8 +38,6 @@ export async function GET(request: Request) {
     // eu posso fazer labels no frontend
 
     // então eu vou criar um aray com o dia e com o score
-    console.log(response)
-
     const ret: ScoreReturn[] = []
 
 
