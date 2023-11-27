@@ -5,3 +5,6 @@
 > dia 22 3 horas
 
 > dia 24 13: 43 a 16:40
+
+> dia 27 16:25 a 17:16
+consegui implementar o datapicker

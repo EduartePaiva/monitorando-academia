@@ -11,6 +11,7 @@ import { Serie } from "@/types"
 import axios from "axios"
 import { regDiaFormSchema } from "@/lib/zodSchemas"
 import toast from "react-hot-toast"
+import { DatePicker } from "@/components/DataPicker"
 
 interface RegistreDiaPageProps {
     exercicios: {
@@ -39,6 +40,7 @@ export default function RegistreDiaPage({
     const [showButton, setShowButton] = useState(false)
     const [isSending, setIsSending] = useState(false)
     const inputRef = useRef<HTMLInputElement>(null)
+    const [date, setDate] = useState<Date | undefined>(new Date())
 
     const handleExercicioSelecionado = (selectedExercicio: string) => {
         setExercicioSelecionado(selectedExercicio)
@@ -112,6 +114,13 @@ export default function RegistreDiaPage({
                 </div>
                 <div className="flex items-start">
                     <div className="flex flex-col gap-2">
+                        <div className="ml-6 flex gap-4 items-center justify-between">
+                            <span>Data</span>
+                            <DatePicker
+                                date={date}
+                                setDate={setDate}
+                            />
+                        </div>
                         <div className="ml-6 flex gap-4 items-center justify-between">
                             <span>Dia da Semana</span>
                             <SelectDiaDaSemana setDiaDaSemana={setDiaDaSemana} />
