@@ -22,5 +22,5 @@ export const regDiaFormSchema = z.object({
     exercicioId: z.string(),
     numeroDeSeries: z.number().gte(1).lte(9),
     series: z.string().min(22).max(208),
-    data: z.date()
+    data: z.date().optional()
 })

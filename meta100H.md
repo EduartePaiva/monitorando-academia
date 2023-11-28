@@ -8,3 +8,5 @@
 
 > dia 27 16:25 a 17:16
 consegui implementar o datapicker
+
+> dia 28 13:36 14:30

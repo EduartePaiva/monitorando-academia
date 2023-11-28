@@ -42,8 +42,9 @@ export async function GET(request: Request) {
 
 
     response.forEach((element) => {
-        const month = element.createdAt.getMonth()
-        const dia = element.createdAt.getDay()
+        const month = element.createdAt.getMonth() + 1
+        const dia = element.createdAt.getDate()
+        console.log(element.createdAt)
         const label = `${month}/${dia}`
 
         const series = JSON.parse(element.series) as Serie[]
@@ -60,6 +61,6 @@ export async function GET(request: Request) {
             })
         }
     })
-
+    //console.log(ret)
     return NextResponse.json(ret, { status: 200 })
 }

@@ -73,11 +73,11 @@ export default function RegistreDiaPage({
                 exercicioSelecionado !== 'nenhum' && numeroDeSeries > 0
 
             if (thereIsData) {
-                console.log('foi aqui')
                 const data = regDiaFormSchema.parse({
                     exercicioId: exercicioSelecionado,
                     numeroDeSeries: numeroDeSeries,
                     series: JSON.stringify(arraySeries),
+                    data: date
                 })
 
                 const response = await axios.post('/api/registre-o-dia', data)

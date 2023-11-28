@@ -10,8 +10,11 @@ export async function POST(request: Request) {
 
         const body = await request.json()
         console.log(body)
-        const date = regDiaFormSchema.parse(body)
-        console.log(date)
+        const date = regDiaFormSchema.parse({
+            ...body,
+            data: body.data ? new Date(body.data) : undefined
+        })
+        //console.log(date)
 
         //aqui eu vou ver se o json do series está em formato de string ou não
 
@@ -20,7 +23,8 @@ export async function POST(request: Request) {
                 userId,
                 numeroDeSeries: date.numeroDeSeries,
                 series: date.series,
-                exercicioId: BigInt(date.exercicioId)
+                exercicioId: BigInt(date.exercicioId),
+                createdAt: date.data
             },
             select: {
                 id: true,
