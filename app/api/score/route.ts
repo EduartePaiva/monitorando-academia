@@ -13,6 +13,16 @@ export async function GET(request: Request) {
     // 1 ano representa em mêses
     // personalizado eu vou calcular a qtd de dias e representar de acordo
 
+    let categoriaId: undefined | bigint = undefined
+    let exercicioId: undefined | bigint = undefined
+    if (searchParams.has("exercicioId")) {
+        const exercicio = searchParams.get("exercicioId") ?? undefined
+        exercicioId = typeof exercicio == 'string' ? BigInt(exercicio) : undefined
+    } else if (searchParams.has("categoriaId")) {
+        const categoria = searchParams.get("categoriaId") ?? undefined
+        categoriaId = typeof categoria == 'string' ? BigInt(categoria) : undefined
+    }
+
 
     // vamos testar 1 mês
     const lastData = new Date()
@@ -24,14 +34,22 @@ export async function GET(request: Request) {
             createdAt: {
                 lte: new Date(),
                 gte: lastData
+            },
+            exercicioId,
+            exercicio: {
+                categoriaId
             }
         },
         select: {
             series: true,
             createdAt: true
+        },
+        orderBy: {
+            createdAt: "asc"
         }
-    })
 
+    })
+    console.log(response)
     // preciso retornar as labels, e the date
 
     // labels dos dias do mês
@@ -44,7 +62,6 @@ export async function GET(request: Request) {
     response.forEach((element) => {
         const month = element.createdAt.getMonth() + 1
         const dia = element.createdAt.getDate()
-        console.log(element.createdAt)
         const label = `${month}/${dia}`
 
         const series = JSON.parse(element.series) as Serie[]
@@ -61,6 +78,5 @@ export async function GET(request: Request) {
             })
         }
     })
-    //console.log(ret)
     return NextResponse.json(ret, { status: 200 })
 }

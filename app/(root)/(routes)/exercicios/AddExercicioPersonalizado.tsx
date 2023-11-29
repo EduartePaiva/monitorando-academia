@@ -101,7 +101,7 @@ export default function AddExercicioPersonalizado({ onClose, diaDaSemana }: { on
                             <FormLabel>Selecione o dia da semana</FormLabel>
                             <div className="w-[50%]">
 
-                                <Select disabled={isLoading} onValueChange={field.onChange} defaultValue={field.value}>
+                                <Select disabled={isLoading} onValueChange={field.onChange} defaultValue={field.value.toString()}>
                                     <FormControl>
                                         <SelectTrigger>
                                             <SelectValue placeholder="Select a verified email to display" />

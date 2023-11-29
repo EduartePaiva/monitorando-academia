@@ -12,11 +12,13 @@ import toast from "react-hot-toast";
 
 export default function EstatisticasPage() {
     const categorias = useQuery({
+        queryKey: ["categorias"],
         queryFn: async () => {
             return (await axios.get('/api/categorias')).data as SafeCategoria[]
         }
     })
     const exercicios = useQuery({
+        queryKey: ['exercicios'],
         queryFn: async () => {
             return (await axios.get('/api/exercicios')).data as SafeExercicio[]
         }
@@ -25,10 +27,23 @@ export default function EstatisticasPage() {
     const [chartWithData, setChartWithData] = useState(false)
     const [scoreData, setScoreData] = useState<ScoreReturn[]>([])
 
+    const [selectedExercise, setSelectedExercise] = useState('all')
+    const [selectedCategory, setSelectedCategory] = useState('all')
+    console.log(selectedExercise, selectedCategory)
+
     const fetchScoreData = async () => {
         try {
             setChartWithData(false)
-            const response = (await axios.get('/api/score')).data as ScoreReturn[]
+            const params = new URLSearchParams()
+
+            // vai faltar o timerange
+
+            if (selectedExercise !== "all") {
+                params.append("exercicioId", selectedExercise)
+            } else if (selectedCategory !== "all") {
+                params.append("categoriaId", selectedCategory)
+            }
+            const response = (await axios.get('/api/score?' + params.toString())).data as ScoreReturn[]
             setScoreData(response)
             toast.success("Dados adquiridos")
         } catch (err) {
@@ -48,7 +63,7 @@ export default function EstatisticasPage() {
                 <div className="flex items-center gap-2">
                     <div>Categorias</div>
                     {
-                        categorias.data ? <CategorySelect categorias={categorias.data} />
+                        categorias.data ? <CategorySelect categorias={categorias.data} setSelectedCategory={setSelectedCategory} />
                             :
                             <span>Carregando</span>
                     }
@@ -56,7 +71,11 @@ export default function EstatisticasPage() {
                 <div className="flex items-center gap-2">
                     <div>Exercícios</div>
                     {
-                        exercicios.data ? <ExercicySelect exercicios={exercicios.data} />
+                        exercicios.data ? <ExercicySelect
+                            exercicios={exercicios.data}
+                            setSelectedExercise={setSelectedExercise}
+                            selectedCategory={selectedCategory}
+                        />
                             :
                             <span>Carregando</span>
                     }

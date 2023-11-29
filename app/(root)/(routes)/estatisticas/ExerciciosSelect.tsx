@@ -7,23 +7,31 @@ import {
     SelectValue
 } from "@/components/ui/select";
 import { SafeExercicio } from "@/types";
+import { Dispatch, SetStateAction } from "react";
 
 interface ExercicySelectProps {
-    exercicios: SafeExercicio[]
+    exercicios: SafeExercicio[];
+    setSelectedExercise: Dispatch<SetStateAction<string>>;
+    selectedCategory: string
 }
 
 export default function ExercicySelect({
-    exercicios
+    exercicios,
+    setSelectedExercise,
+    selectedCategory
+
 }: ExercicySelectProps) {
     return (
-        <Select defaultValue="all">
+        <Select defaultValue="all" onValueChange={(value) => setSelectedExercise(value)}>
             <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="" />
             </SelectTrigger>
             <SelectContent>
                 <SelectGroup>
                     <SelectItem value="all">Todos</SelectItem>
-                    {exercicios.map((exercicio, index) => (
+                    {exercicios.filter((exercicio) =>
+                        selectedCategory === "all" || exercicio.categoriaId === selectedCategory
+                    ).map((exercicio, index) => (
                         <SelectItem key={index} value={exercicio.id}>{exercicio.nome}</SelectItem>
                     ))}
                 </SelectGroup>

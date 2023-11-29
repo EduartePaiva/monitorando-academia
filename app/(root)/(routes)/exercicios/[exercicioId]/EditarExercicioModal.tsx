@@ -110,7 +110,7 @@ export default function EditarExercicioModal({
                                 <FormLabel>Selecione o dia da semana</FormLabel>
                                 <div className="w-[50%]">
 
-                                    <Select disabled={loading} onValueChange={field.onChange} defaultValue={field.value}>
+                                    <Select disabled={loading} onValueChange={field.onChange} defaultValue={field.value.toString()}>
                                         <FormControl>
                                             <SelectTrigger>
                                                 <SelectValue placeholder="Select a verified email to display" />

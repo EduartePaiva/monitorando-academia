@@ -1,15 +1,18 @@
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { SafeCategoria } from "@/types";
+import { Dispatch, SetStateAction } from "react";
 
 interface CategorySelectProps {
-    categorias: SafeCategoria[]
+    categorias: SafeCategoria[];
+    setSelectedCategory: Dispatch<SetStateAction<string>>;
 }
 
 export default function CategorySelect({
-    categorias
+    categorias,
+    setSelectedCategory
 }: CategorySelectProps) {
     return (
-        <Select defaultValue="all">
+        <Select defaultValue="all" onValueChange={(value) => setSelectedCategory(value)}>
             <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="" />
             </SelectTrigger>
