@@ -13,4 +13,6 @@ consegui implementar o datapicker
 
 > dia 29 15:17 a 17:40
 
-> dia 4 16:00 a 
+> dia 4 16:00 a 17
+
+> dia 6 15:45 a 
