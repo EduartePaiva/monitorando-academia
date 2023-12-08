@@ -24,3 +24,9 @@ export const regDiaFormSchema = z.object({
     series: z.string().min(22).max(208),
     data: z.date().optional()
 })
+
+export const configLogicZod = z.object({
+    de: z.string(),
+    a: z.string(),
+    importancia: z.string()
+}).array()
