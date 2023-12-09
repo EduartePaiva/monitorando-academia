@@ -1,11 +1,12 @@
 import prismadb from "@/lib/prismadb"
-import { ScoreReturn, Serie } from "@/types"
+import { configLogicZod } from "@/lib/zodSchemas"
+import { OptConfigLogic, ScoreReturn, Serie, configLogic } from "@/types"
 import { auth } from "@clerk/nextjs"
 import { NextResponse } from "next/server"
 
 export async function GET(request: Request) {
     const { searchParams } = new URL(request.url)
-    const { userId } = auth()
+    const { userId, sessionClaims } = auth()
     if (!userId) return new NextResponse('Unauthorized', { status: 401 })
     // último mês, ultimos 3 meses, ultimo ano, personalizado
     // 30 dias representa em dias,
@@ -22,7 +23,6 @@ export async function GET(request: Request) {
         const categoria = searchParams.get("categoriaId") ?? undefined
         categoriaId = typeof categoria == 'string' ? BigInt(categoria) : undefined
     }
-
 
     // vamos testar 1 mês
     const lastData = new Date()
@@ -47,27 +47,44 @@ export async function GET(request: Request) {
         orderBy: {
             createdAt: "asc"
         }
-
     })
-    console.log(response)
     // preciso retornar as labels, e the date
 
     // labels dos dias do mês
     // eu posso fazer labels no frontend
 
     // então eu vou criar um aray com o dia e com o score
+
+    let configList: configLogic[] = []
+    const result = configLogicZod.safeParse(sessionClaims.configList)
+    if (result.success) configList = result.data
+    const optConfigList: OptConfigLogic[] = configList.map((conf) => ({
+        a: parseInt(conf.a),
+        de: parseInt(conf.de),
+        importancia: parseFloat(conf.importancia) / 100
+    }))
+
+    const calculaPeso = (reps: number) => {
+        if (optConfigList.length == 0) return reps
+        let repNumber = 0
+        for (let i = 0; i < optConfigList.length - 1; i++) {
+            if (reps > optConfigList[i].a) {
+                repNumber += (optConfigList[i].a - optConfigList[i].de) * optConfigList[i].importancia
+            } else {
+                repNumber += (reps - optConfigList[i].de) * optConfigList[i].importancia
+                return repNumber
+            }
+        }
+        return repNumber + (optConfigList[optConfigList.length - 1].de - reps) * optConfigList[optConfigList.length - 1].importancia
+    }
+
     const ret: ScoreReturn[] = []
-
-
     response.forEach((element) => {
         const month = element.createdAt.getMonth() + 1
         const dia = element.createdAt.getDate()
         const label = `${month}/${dia}`
-
         const series = JSON.parse(element.series) as Serie[]
-        const data = series.reduce((prev, serie) => {
-            return prev += (serie.carga * serie.reps)
-        }, 0)
+        const data = series.reduce((prev, serie) => prev + (serie.carga * calculaPeso(serie.reps)), 0)
 
         if (ret.length > 0 && ret[ret.length - 1].label == label) {
             ret[ret.length - 1].data += data

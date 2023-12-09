@@ -52,3 +52,14 @@ export interface ScoreReturn {
     label: string
     data: number
 }
+
+export interface configLogic {
+    de: string;
+    a: string;
+    importancia: string
+}
+export interface OptConfigLogic {
+    de: number;
+    a: number;
+    importancia: number;
+}

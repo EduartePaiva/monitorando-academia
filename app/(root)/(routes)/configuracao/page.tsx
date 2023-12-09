@@ -6,12 +6,8 @@ import { useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import toast from "react-hot-toast";
 import { configLogicZod } from "@/lib/zodSchemas";
+import { configLogic } from "@/types";
 // vou salvar no localstorage
-interface configLogic {
-    de: string;
-    a: string;
-    importancia: string
-}
 
 
 export default function ConfiguracaoPage() {
@@ -50,7 +46,7 @@ export default function ConfiguracaoPage() {
             }
             return copy
         } else {
-            console.log('Não é um número')
+            //console.log('Não é um número')
             return prev
         }
     })
@@ -58,7 +54,6 @@ export default function ConfiguracaoPage() {
         //checar se a configuração está certa
         try {
             setSaving(true)
-
             let configValida = true
             for (let i = 1; i < confitList.length; i++) {
                 const de = parseInt(confitList[i - 1].de)

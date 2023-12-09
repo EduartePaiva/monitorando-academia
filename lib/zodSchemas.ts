@@ -30,3 +30,5 @@ export const configLogicZod = z.object({
     a: z.string(),
     importancia: z.string()
 }).array()
+
+

@@ -87,9 +87,9 @@ export default function EstatisticasPage() {
                 <Button
                     onClick={() => fetchScoreData()}
                 >Ultimo Mês</Button>
-                <Button>Três Meses</Button>
-                <Button>Ultimo Ano</Button>
-                <Button>Personalizado</Button>
+                <Button disabled>Três Meses</Button>
+                <Button disabled>Ultimo Ano</Button>
+                <Button disabled>Personalizado</Button>
             </div>
             {/* Gráfico de linhas */}
             <div className="flex justify-center">
