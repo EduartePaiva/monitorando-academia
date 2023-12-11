@@ -1,5 +1,6 @@
 'use client'
 
+import { ThemeToggler } from "@/components/ThemeToggler";
 import { UserButton } from "@clerk/nextjs";
 import Link from "next/link";
 import { usePathname } from 'next/navigation'
@@ -36,7 +37,6 @@ export default function Header() {
         },
     ]
 
-
     return (
         <header className="bg-gray-300 shadow-lg shadow-gray-400 mb-16">
             <nav className='h-12 flex justify-between items-center'>
@@ -51,6 +51,7 @@ export default function Header() {
                     ))}
 
                 </div>
+                {/* <ThemeToggler /> */}
                 <div className='mr-8'>
                     <UserButton afterSignOutUrl='/' />
 

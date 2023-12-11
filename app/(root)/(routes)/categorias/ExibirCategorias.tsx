@@ -2,21 +2,10 @@
 
 import { SafeCategoria } from "@/types"
 import CategoriaCard from "./CategoriaCard"
-import { useQuery, useQueryClient } from "@tanstack/react-query"
+import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
-import { Modal } from "@/components/modalDialog"
-import { useState } from "react"
-import EditCategoriaForm from "./[categoriaId]/EditCategoriaForm"
-import ExcluirCategoria from "./[categoriaId]/ExcluirCategoria"
-import toast from "react-hot-toast"
 
 export default function ExibirCategorias({ initialCategorias }: { initialCategorias: SafeCategoria[] }) {
-
-
-
-    const queryClient = useQueryClient()
-
-
     const { data: categorias } = useQuery({
         queryKey: ["categorias"],
         queryFn: async () => {
@@ -24,17 +13,14 @@ export default function ExibirCategorias({ initialCategorias }: { initialCategor
         },
         initialData: initialCategorias
     })
-
-
-
-
-
-
-
     return (
-        <div className="h-full flex items-center flex-col gap-16 justify-center">
+        <div className="mt-16 h-full flex items-center flex-wrap gap-8 justify-center">
             {categorias.map((categoria, index) => (
-                <CategoriaCard key={index} categoria={categoria} />
+                <div
+                    className="basis-4/6 md:basis-1/2 lg:basis-1/3"
+                    key={index}>
+                    <CategoriaCard categoria={categoria} />
+                </div>
             ))}
         </div>
     )

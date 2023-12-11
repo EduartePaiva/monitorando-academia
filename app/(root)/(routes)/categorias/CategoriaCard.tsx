@@ -15,7 +15,7 @@ export default function CategoriaCard({
 
     return (
         <Card
-            className="w-1/3 cursor-pointer transition ease-in-out hover:scale-110 hover:shadow-lg"
+            className=" w-full cursor-pointer transition ease-in-out hover:scale-110 hover:shadow-lg"
             onClick={() => {
                 router.push(`/categorias/${categoria.id}`)
             }}

@@ -19,4 +19,6 @@ consegui implementar o datapicker
 
 > dia 8 16:00 a 19
 
-> dia 9 13:50 16
+> dia 9 13:50 a 16
+
+> dia 11 15:35 a 17:20

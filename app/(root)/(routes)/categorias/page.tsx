@@ -1,5 +1,4 @@
 import NovaCategoria from "./NovaCategoria";
-import CategoriaCard from "./CategoriaCard";
 import prismadb from "@/lib/prismadb";
 import { auth } from "@clerk/nextjs";
 import ExibirCategorias from "./ExibirCategorias";
