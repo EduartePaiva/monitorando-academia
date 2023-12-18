@@ -94,7 +94,7 @@ export default function EstatisticasPage() {
             {/* Gráfico de linhas */}
             <div className="flex justify-center">
                 <div className="sm:w-11/12 md:w-5/6  lg:w-2/3">
-                    {chartWithData ? <LineChart dados={scoreData} /> : <span>Carregando</span>}
+                    {chartWithData ? <LineChart dados={scoreData} /> : <span>Selecione um range de tempo</span>}
                 </div>
             </div>
         </div>

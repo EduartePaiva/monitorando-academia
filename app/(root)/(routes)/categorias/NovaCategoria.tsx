@@ -19,8 +19,9 @@ export default function NovaCategoria({ className }: { className: string }) {
                 isOpen={isOpen}
                 onClose={onClose}
                 title="Categoria"
-                children={<AddEditCategoriaForm onClose={onClose} />}
-            />
+            >
+                <AddEditCategoriaForm onClose={onClose} />
+            </Modal>
             <Button onClick={() => setIsOpen(true)}>
                 Nova Categoria
             </Button>

@@ -20,7 +20,7 @@ export default function ConfiguracaoPage() {
             const configData = configLogicZod.parse(user?.unsafeMetadata.configList)
             setConfigList(configData)
         } catch (e) {
-            toast.error('erro clerk')
+            toast('Atualize as configurações.')
         }
     }, [user?.unsafeMetadata.configList])
 

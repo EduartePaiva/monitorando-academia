@@ -46,8 +46,9 @@ export default function EditarExcluir({ exercicio }: { exercicio: Exercicio }) {
                 isOpen={isOpen}
                 onClose={onClose}
                 title="Editar o Exercício"
-                children={<EditarExercicioModal exercicio={exercicio} onClose={onClose} />}
-            />
+            >
+                <EditarExercicioModal exercicio={exercicio} onClose={onClose} />
+            </Modal>
             {/* Botão de editar o exercício */}
             <Button onClick={() => setIsOpen(true)} variant="outline">Editar Exercício</Button>
 

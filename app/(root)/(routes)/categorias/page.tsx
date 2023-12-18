@@ -28,7 +28,7 @@ export default async function CategoriasPage() {
                     {safeCategorias.length > 1 ? (
                         <ExibirCategorias initialCategorias={safeCategorias} />
                     ) : (
-                        <span className="text-lg font-semibold">Não há categoria adicionada, clique em "Nova Categoria" para adicionar uma.</span>
+                        <span className="text-lg font-semibold">Não há categoria adicionada, clique em &quot;Nova Categoria&quot; para adicionar uma.</span>
                     )}
                 </div>
             </div>

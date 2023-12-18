@@ -20,7 +20,6 @@ export async function GET() {
                 descricao: true
             }
         })
-        console.log("CATEGORIAS_GET")
         return NextResponse.json(categorias.map((categoria) => (
             {
                 ...categoria,

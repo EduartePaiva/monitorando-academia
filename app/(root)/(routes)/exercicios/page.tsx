@@ -41,8 +41,9 @@ export default function ExerciciosPage() {
                 onClose={onClose}
                 title="Adicionando Treino"
                 description="Adicione o Exercício!"
-                children={<AddExercicio diaDaSemana={diaDaSemana} onClose={onClose} />}
-            />
+            >
+                <AddExercicio diaDaSemana={diaDaSemana} onClose={onClose} />
+            </Modal>
 
             {dias_da_semana.map((dia, index) => (
                 <div className="flex flex-col items-center w-28" key={index}>

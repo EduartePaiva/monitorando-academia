@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import toast from "react-hot-toast"
 import axios from "axios"
 import { useMutation, useQuery } from "@tanstack/react-query"
-import { PenSquare, Pencil, Trash, X } from "lucide-react"
+import { PenSquare, Trash } from "lucide-react"
 import '@/prototype/string.extensions'
 import { Modal } from "@/components/modalDialog"
 import EditCategoriaForm from "./EditCategoriaForm"
@@ -120,28 +120,28 @@ export default function SistemaDeCategorias({
                 isOpen={isEdit}
                 onClose={onCloseEdit}
                 title="Categoria"
-                children={
-                    <EditCategoriaForm
-                        onClose={onCloseEdit}
-                        descricao={initialCategoria.descricao}
-                        id={initialCategoria.id}
-                        nome={initialCategoria.nome}
-                    />}
-            />
+            >
+                <EditCategoriaForm
+                    onClose={onCloseEdit}
+                    descricao={initialCategoria.descricao}
+                    id={initialCategoria.id}
+                    nome={initialCategoria.nome}
+                />
+            </Modal>
             <Modal
                 description={`Tem certeza que deseja excluir a categoria "${initialCategoria.nome}"?`}
                 isOpen={isDelete}
                 onClose={onCloseDelete}
                 title="Excluir a categoria"
-                children={
-                    <ExcluirCategoria
-                        onClose={onCloseDelete}
-                        confirmDelete={confirmDelete}
-                        isDeleting={isDeleteing}
-                        id={initialCategoria.id}
-                    />
-                }
-            />
+            >
+                <ExcluirCategoria
+                    onClose={onCloseDelete}
+                    confirmDelete={confirmDelete}
+                    isDeleting={isDeleteing}
+                    id={initialCategoria.id}
+                />
+
+            </Modal>
 
 
             {/* Esta parte adiciona exercícios a categoria */}

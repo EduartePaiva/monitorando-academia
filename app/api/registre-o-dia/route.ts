@@ -9,12 +9,10 @@ export async function POST(request: Request) {
         if (!userId) return new NextResponse('Unauthorized', { status: 401 })
 
         const body = await request.json()
-        console.log(body)
         const date = regDiaFormSchema.parse({
             ...body,
             data: body.data ? new Date(body.data) : undefined
         })
-        //console.log(date)
 
         //aqui eu vou ver se o json do series está em formato de string ou não
 
