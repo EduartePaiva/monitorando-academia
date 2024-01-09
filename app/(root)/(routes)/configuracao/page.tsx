@@ -12,7 +12,7 @@ import { configLogic } from "@/types";
 
 export default function ConfiguracaoPage() {
     const { user } = useUser()
-    const [confitList, setConfigList] = useState<configLogic[]>([{ de: '1', a: '∞', importancia: '100' }])
+    const [confitList, setConfigList] = useState<configLogic[]>([{ de: '0', a: '∞', importancia: '100' }])
     const [saving, setSaving] = useState(false)
 
     useEffect(() => {
@@ -33,6 +33,14 @@ export default function ConfiguracaoPage() {
         const configCopy = [...confitList]
         if (configCopy.length > 1) {
             configCopy.splice(configCopy.length - 2, 1)
+            if (configCopy.length == 1) {
+                configCopy[0].de = '0'
+            } else {
+                const last = configCopy.length - 1
+                const prev = configCopy.length - 2
+                const val = parseInt(configCopy[prev].a)
+                configCopy[last].de = `${val + 1}`
+            }
             setConfigList(configCopy)
         }
     }
